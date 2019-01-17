@@ -1,0 +1,30 @@
+{
+  "account": {
+    "name": "Sannsyn Test 4",
+    "externalManager": {
+      "username": "kjetil.hustveit@gmail.com",
+      "password": "test1234",
+      "person": {
+        "uuid": "f6eb49618ca540959116f66787eb593c"
+      }
+    },
+    "internalManager": {
+      "uuid": "41fcff3b8db64fbf8474ee2df1735b63"
+    },
+    "organization": {
+      "name": "Sannsyn AS",
+      "addresses": [
+        {
+          "street": "Gaustadallen 16",
+          "city": "Oslo",
+          "country": "Norway",
+          "zip": "0123"
+        }
+      ]
+    },
+    "selectedService": {
+      "name": "Test service",
+      "serviceEndpoint": "https://arkanbefaler.sannsyn.com/path_to_configuration_endpoint"
+    }
+  }
+}

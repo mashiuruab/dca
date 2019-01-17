@@ -1,0 +1,11 @@
+# Rename this file to config.properties and update the values.
+adminServerUrl=http://localhost:9000
+wsUserName =sannsyn
+wsPassword=password
+mailSenderUserName=sannsyn.com@gmail.com
+mailSenderPassword=mailpassword
+metaDataServerUrl=http://metadata.sannsyn.com
+analyticsServerUrl=http://91.205.186.74:9000
+tmpDirectory=/tmp/
+arkSolrUser=solruser
+arkSolrPassword=solrpassword

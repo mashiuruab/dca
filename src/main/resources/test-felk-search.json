@@ -1,0 +1,11 @@
+[
+  [
+    "search",
+    {
+      "account": "felk",
+      "taxon": "product",
+      "query": "*a*",
+      "pointers": ["/isbn", "/title"]
+    }
+  ]
+]

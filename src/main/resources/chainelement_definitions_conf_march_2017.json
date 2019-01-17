@@ -1,0 +1,2913 @@
+{
+  "com/sannsyn/aggregator/computation/ensemble/impl/examples/IdentityTransform": {
+    "defaults": {},
+    "schema": {
+      "description": "This returns the input just as it is."
+    },
+    "type": "transform"
+  },
+  "com/sannsyn/aggregator/computation/ensemble/impl/examples/NumberSequence": {
+    "defaults": {
+      "from": 0,
+      "random": false,
+      "to": 10
+    },
+    "schema": {
+      "description": "Produces a sequence of numbers",
+      "properties": {
+        "from": {
+          "type": "integer"
+        },
+        "random": {
+          "type": "boolean"
+        },
+        "to": {
+          "type": "integer"
+        }
+      }
+    },
+    "type": "producer"
+  },
+  "com/sannsyn/aggregator/computation/ensemble/impl/examples/StaticContent": {
+    "defaults": {},
+    "schema": {
+      "description": "This produces a constantly scored set of items.",
+      "properties": {
+        "content": {
+          "description": "The values to return",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "content"
+      ]
+    },
+    "type": "producer"
+  },
+  "com/sannsyn/aggregator/computation/ensemble/impl/filters/ClusterCloudToEntities": {
+    "defaults": {},
+    "schema": {
+      "description": "Transforms a set of clusters to a set of entities where all entities are weighted by their relationship to the clusters.",
+      "properties": {
+        "clusterAggregate": {
+          "$ref": "#/definitions/AGGREGATE_RELATIONAL",
+          "description": "An aggregate where we can look up the clusters found in the input-source, and where the entities with relations to them are the ones we score and return."
+        }
+      }
+    },
+    "type": "transform"
+  },
+  "com/sannsyn/aggregator/computation/ensemble/impl/filters/ClusterHasEntityConditional": {
+    "defaults": {
+      "invert": false,
+      "nullClusterResult": false,
+      "nullEntityResult": false,
+      "relationalAggregate": null
+    },
+    "schema": {
+      "description": "Invokes the following chain if the condition is met, that is, if the cluster identified by externalIds[0] has the entity identified by externalIds[1].",
+      "properties": {
+        "invert": {
+          "description": "Should the cluster NOT contain the entity?",
+          "type": "boolean"
+        },
+        "nullClusterResult": {
+          "description": "What to return if we cant find the cluster.",
+          "type": "boolean"
+        },
+        "nullEntityResult": {
+          "description": "What to return if we cant find the entity",
+          "type": "boolean"
+        },
+        "relationalAggregate": {
+          "$ref": "#/definitions/AGGREGATE_RELATIONAL",
+          "description": "The relational aggregate where we look up cluster(externalId[0]) and entity(externalId[1])"
+        }
+      }
+    },
+    "type": "transform"
+  },
+  "com/sannsyn/aggregator/computation/ensemble/impl/filters/ClusterSizeCondition": {
+    "defaults": {
+      "maxSize": null,
+      "minSize": null,
+      "relationalAggregate": null
+    },
+    "schema": {
+      "description": "Invokes the following chain if the condition is met, that is, if the entity exists and has a size in the given range.",
+      "properties": {
+        "maxSize": {
+          "description": "cluster.size <= this, use null for no upper bound",
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "minSize": {
+          "description": "cluster.size >= this, use null for no lower bound",
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "relationalAggregate": {
+          "$ref": "#/definitions/AGGREGATE_RELATIONAL",
+          "description": "The aggregate with relational-entities where we look up the externalId"
+        }
+      }
+    },
+    "type": "transform"
+  },
+  "com/sannsyn/aggregator/computation/ensemble/impl/filters/EntitySizeCondition": {
+    "defaults": {
+      "maxSize": null,
+      "minSize": null
+    },
+    "schema": {
+      "description": "Invokes the following chain if the condition is met, that is, if the entity exists and has a size in the given range.",
+      "properties": {
+        "aggregate": {
+          "$ref": "#/definitions/AGGREGATE_RELATIONAL",
+          "description": "The aggregate with relational-entities where we look up the externalId"
+        },
+        "maxSize": {
+          "description": "entity.size <= this, use null for no upper bound",
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "minSize": {
+          "description": "entity.size >= this, use null for no lower bound",
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "type": "transform"
+  },
+  "com/sannsyn/aggregator/computation/ensemble/impl/filters/FilterInputMatchingIds": {
+    "defaults": {
+      "filterIds": [],
+      "idsource": "EXTERNAL_IDS",
+      "invert": false
+    },
+    "schema": {
+      "description": "Filters out results with values matching an externalId",
+      "properties": {
+        "filterIds": {
+          "description": "An alternative source of ids to filter out.",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "idsource": {
+          "description": "Filter ids matching externalIds, ids matching a supplied list(filterIds), or both.",
+          "enum": [
+            "EXTERNAL_IDS",
+            "CENSOR_IDS",
+            "BOTH"
+          ],
+          "type": "string"
+        },
+        "invert": {
+          "description": "if true, filter out reults NOT matching any of the supplied ids.  Defaults to false.",
+          "type": "boolean"
+        }
+      }
+    },
+    "type": "filter"
+  },
+  "com/sannsyn/aggregator/computation/ensemble/impl/filters/FilterOnUpdateListener": {
+    "defaults": {
+      "mode": "RETAIN"
+    },
+    "schema": {
+      "description": "Retains/Cencors incomming result on properties found in the clusterEntityMap.  The incoming values are treated as clusters and the filter-property as entity.",
+      "properties": {
+        "clusterEntityMap": {
+          "$ref": "#/definitions/UPDATELISTENER_FILTER"
+        },
+        "mode": {
+          "enum": [
+            "RETAIN",
+            "CENSOR"
+          ],
+          "type": "string"
+        },
+        "property": {
+          "description": "The property to filter on, that is retain/cencor clusters with this property.",
+          "type": "string"
+        }
+      }
+    },
+    "type": "filter"
+  },
+  "com/sannsyn/aggregator/computation/ensemble/impl/filters/RetainAggregate": {
+    "defaults": {},
+    "schema": {
+      "description": "Retains all entities found in the named aggregate.",
+      "properties": {
+        "aggregate": {
+          "$ref": "#/definitions/AGGREGATE"
+        }
+      }
+    },
+    "type": "filter"
+  },
+  "com/sannsyn/aggregator/computation/ensemble/impl/filters/RetainAll": {
+    "defaults": {},
+    "schema": {
+      "description": "Retains all items in the stream."
+    },
+    "type": "filter"
+  },
+  "com/sannsyn/aggregator/computation/ensemble/impl/filters/RetainClustersByDistanceToInput": {
+    "defaults": {
+      "censorIds": [],
+      "inputSource": "EXTERNAL_IDS",
+      "maximumDistance": null,
+      "minimumDistance": null,
+      "mode": "ALL"
+    },
+    "schema": {
+      "description": "Filters out clusters from the source-input with a jaccard-distance not in the range minDistance() to maxDistance() of the clusters identified by the externalIds.",
+      "properties": {
+        "censorIds": {
+          "description": "If inpuSource is CENSOR_IDS, this will be the clusters to retain/censor against",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "clusterAggregate": {
+          "$ref": "#/definitions/AGGREGATE_CLUSTER",
+          "description": "The aggregate where we compare cluster-distances"
+        },
+        "intpuSource": {
+          "description": "Use EXTERNAL_IDS to censor by distance to externalIds.  Use CENSOR_IDS to censor on a custom list",
+          "enum": [
+            "EXTERNAL_IDS",
+            "CENSOR_IDS"
+          ],
+          "type": "string"
+        },
+        "maximumDistance": {
+          "description": "The maximum distance, measured as jaccard-distance, to be allowed.",
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "minimumDistance": {
+          "description": "The minimum distance, measured as jaccard-distance, to be allowed.",
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "mode": {
+          "description": "ALL: all entities must be within the range of all inputs, ATLEAST_ONE: must be within the range of atleast one input, STANDARD: must not be within the range of any inputs.",
+          "enum": [
+            "ALL",
+            "ATLEAST_ONE",
+            "STANDARD"
+          ],
+          "type": "string"
+        }
+      }
+    },
+    "type": "filter"
+  },
+  "com/sannsyn/aggregator/computation/ensemble/impl/filters/RetainClustersByEntityDistanceToInput": {
+    "defaults": {
+      "censorIds": [],
+      "inputSource": "EXTERNAL_IDS",
+      "maximumDistance": null,
+      "minimumDistance": null,
+      "mode": "ALL"
+    },
+    "schema": {
+      "description": "Filters out clusters from the source-input where entities have the right distances (mindist < dist < maxdist) to entities found in the inputSource.",
+      "properties": {
+        "censorIds": {
+          "description": "If inpuSource is CENSOR_IDS, this will be the clusters to retain/censor against",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "clusterAggregate": {
+          "$ref": "#/definitions/AGGREGATE_RELATIONAL",
+          "description": "The aggregate where we compare cluster-distances"
+        },
+        "entityAggregate": {
+          "$ref": "#/definitions/AGGREGATE_RELATIONAL",
+          "description": "The aggregate where we compare cluster-cluster-distances.  Assuming entities in the clusterAggregate are clusters in the entityAggregate.  Also the censor-ids must be clusterIds in this aggregate."
+        },
+        "intpuSource": {
+          "description": "Use EXTERNAL_IDS to censor by distance to externalIds.  Use CENSOR_IDS to censor on a custom list",
+          "enum": [
+            "EXTERNAL_IDS",
+            "CENSOR_IDS"
+          ],
+          "type": "string"
+        },
+        "maximumDistance": {
+          "description": "The maximum distance, measured as jaccard-distance, to be allowed.",
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "minimumDistance": {
+          "description": "The minimum distance, measured as jaccard-distance, to be allowed.",
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "mode": {
+          "description": "ALL: all entities must be within the range of all inputs, ATLEAST_ONE: must be within the range of atleast one input, STANDARD: must not be within the range of any inputs.",
+          "enum": [
+            "ALL",
+            "ATLEAST_ONE",
+            "STANDARD"
+          ],
+          "type": "string"
+        }
+      }
+    },
+    "type": "filter"
+  },
+  "com/sannsyn/aggregator/computation/ensemble/impl/filters/RetainClustersMatchingTarget": {
+    "defaults": {
+      "excludeEntities": [],
+      "externalIdIndex": 0
+    },
+    "schema": {
+      "description": "Filters out clusters with non matching entities/excludeEntities.",
+      "properties": {
+        "excludeEntities": {
+          "description": "Do not match on entities in this set.",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "featureaggregate": {
+          "$ref": "#/definitions/AGGREGATE_RELATIONAL",
+          "description": "An aggregate with entities to match"
+        }
+      }
+    },
+    "type": "filter"
+  },
+  "com/sannsyn/aggregator/computation/ensemble/impl/filters/RetainClustersWithEntity": {
+    "defaults": {
+      "discardMissingClusters": false,
+      "entityId": null,
+      "entityIdSource": "CONFIG",
+      "inverse": false
+    },
+    "schema": {
+      "description": "Retains all clusters containing the given entitiy, eg. if you have a article -> theme aggregate, you may retain articles of a specific theme.",
+      "properties": {
+        "aggregate": {
+          "$ref": "#/definitions/AGGREGATE_RELATIONAL",
+          "description": "The aggregate where we can find the specified cluster"
+        },
+        "discardMissingClusters": {
+          "description": "If true, clusters not found in the aggregate will be discarded.",
+          "type": "boolean"
+        },
+        "entityId": {
+          "description": "The id of the entity required in each cluster",
+          "type": "string"
+        },
+        "entityIdSource": {
+          "description": "Should the entity we filter on be fetched from config or is it the externalId",
+          "enum": [
+            "CONFIG",
+            "EXTERNALID"
+          ],
+          "type": "string"
+        },
+        "invverse": {
+          "description": "If true, only cluster without the entity is retained",
+          "type": "boolean"
+        }
+      }
+    },
+    "type": "filter"
+  },
+  "com/sannsyn/aggregator/computation/ensemble/impl/filters/RetainClustersWithUniqueEntity": {
+    "defaults": {
+      "aggregate": null,
+      "discardMissingClusters": true,
+      "mode": "NONE",
+      "thesaurus": null
+    },
+    "schema": {
+      "description": "Retains the first unique items with respect to entities in the given aggregate.  Eg. The first books with a given title(the aggregate would be a book-title aggregate), or the first item of a specific category... ",
+      "properties": {
+        "aggregate": {
+          "$ref": "#/definitions/AGGREGATE_CLUSTER",
+          "description": "The aggregate where we compare fetch the entities for the cluster(eg. the book-title aggregate), only ONE of aggregate and thesaurus should be used"
+        },
+        "discardMissingClusters": {
+          "description": "If true and we dont find the corresponding cluster, we keep it, false we discard inputs with missing clusters.",
+          "type": "boolean"
+        },
+        "mode": {
+          "description": "ALL: retain if all entities har already been found, NOT_ALL: retains if not all entities are alredy found, NONE: retains if none of the entities are found.",
+          "enum": [
+            "ALL",
+            "NOT_ALL",
+            "NONE"
+          ],
+          "type": "string"
+        },
+        "thesaurus": {
+          "$ref": "#/definitions/AGGREGATE_THESAURUS",
+          "description": "The aggregate where we compare fetch the entities for the cluster(eg. the book-title aggregate), only ONE of aggregate and thesaurus should be used"
+        }
+      }
+    },
+    "type": "filter"
+  },
+  "com/sannsyn/aggregator/computation/ensemble/impl/filters/RetainEnitiesMatchingClusterCategory": {
+    "defaults": {
+      "clusterEntityAggregate": null,
+      "feature": null,
+      "featureaggregate": null,
+      "keepEntitiesWithNoFeatures": true
+    },
+    "schema": {
+      "description": "Retains sourceitems only if they do not have the feature, or the cluster(found by externalId) also has it.",
+      "properties": {
+        "clusterEntityAggregate": {
+          "$ref": "#/definitions/AGGREGATE_CLUSTER",
+          "description": "The aggregate(C -> A) where we look up the current cluster from the externalId, we then iterate over each entity and look for the feature."
+        },
+        "feature": {
+          "description": "The externalId of a feature(F) found in the featureaggregate",
+          "type": "string"
+        },
+        "featureaggregate": {
+          "$ref": "#/definitions/AGGREGATE_CLUSTER",
+          "description": "An aggregate(A -> F) where we find features, both the given feature(as an entity), the features of the incomming results(clusters) and the features of the cluster(cluster -> entity -> feature)"
+        },
+        "keepEntitiesWithNoFeature": {
+          "description": "Should we keep entities not found in the featureaggregate?",
+          "type": "boolean"
+        }
+      }
+    },
+    "type": "filter"
+  },
+  "com/sannsyn/aggregator/computation/ensemble/impl/filters/RetainEntitiesInCluster": {
+    "defaults": {
+      "clusterIdSource": "CONFIG",
+      "invert": false,
+      "missingClusterHandling": "RETAIN_ALL",
+      "mode": "RETAIN",
+      "parameterName": "runtimeParamFilterClusterId"
+    },
+    "schema": {
+      "description": "Retains all entities found in a relational cluster, eg. if you have a theme -> article aggregate, you may retain articles of a specific theme.",
+      "properties": {
+        "aggregate": {
+          "$ref": "#/definitions/AGGREGATE_RELATIONAL",
+          "description": "The aggregate where we can find the specified cluster"
+        },
+        "clusterId": {
+          "description": "The external id of the cluster used to filter elements.  Only if clusterIdsource is CONFIG",
+          "type": "string"
+        },
+        "clusterIdSource": {
+          "description": "Use config.clusterId (eg. clusterId=cat1) to select a fixed cluster, use externalId to select first externalId, or use a specific parameter named in parameterName",
+          "enum": [
+            "CONFIG",
+            "EXTERNAL_ID",
+            "PARAMETER"
+          ],
+          "type": "string"
+        },
+        "invert": {
+          "description": "DEPRECATED, use mode instead. Select entities NOT in cluster",
+          "type": "boolean"
+        },
+        "missingClusterHandling": {
+          "description": "What action should be taken if the given clusterId is missing, either discard all or retain all",
+          "enum": [
+            "RETAIN_ALL",
+            "DISCARD_ALL"
+          ],
+          "type": "string"
+        },
+        "mode": {
+          "description": "Should we retain or filter out items in the cluster",
+          "enum": [
+            "RETAIN",
+            "FILTER"
+          ],
+          "type": "string"
+        },
+        "parameterName": {
+          "description": "If clusterIdSource is PARAMETER, this is the name where we expect to find the clusterId.",
+          "type": "string"
+        }
+      }
+    },
+    "type": "filter"
+  },
+  "com/sannsyn/aggregator/computation/ensemble/impl/filters/RetainHead": {
+    "defaults": {
+      "debug": false,
+      "externalIdIndex": 0,
+      "fallbackN": 10,
+      "head": 10,
+      "method": "CONSTANT",
+      "nFactor": 1
+    },
+    "schema": {
+      "description": "Retains the first items. If method is CONSTANT, the first N 'head' items are retained, otherwise the first 'nFactor'*n (where n is the requested number of recommendations) items are retained",
+      "properties": {
+        "fallbackN": {
+          "description": "If we fail to determine head-size, fallback to this size.",
+          "type": "integer"
+        },
+        "head": {
+          "description": "If CONSTANT, this number of items are retained",
+          "type": "integer"
+        },
+        "method": {
+          "description": "Select number to retain by either CONSTANT or N_FACTOR",
+          "enum": [
+            "CONSTANT",
+            "N_FACTOR"
+          ],
+          "type": "string"
+        },
+        "nFactor": {
+          "description": "If N_FACTOR, this will be multiplied with n to find head",
+          "type": "number"
+        }
+      }
+    },
+    "type": "filter"
+  },
+  "com/sannsyn/aggregator/computation/ensemble/impl/filters/RetainScoreRange": {
+    "defaults": {
+      "range": {
+        "max": null,
+        "min": null
+      }
+    },
+    "schema": {
+      "description": "Retains all entities with scores/weights within the bounds(inclusive).",
+      "properties": {
+        "range": {
+          "properties": {
+            "max": {
+              "description": "Retain entities with scores less than or equal to this. If null this will default to positive_infinity",
+              "type": "number"
+            },
+            "min": {
+              "description": "Retain entities with scores larger or equal to this. If null this will default to negative_infinity",
+              "type": "number"
+            }
+          },
+          "type": "object"
+        }
+      }
+    },
+    "type": "filter"
+  },
+  "com/sannsyn/aggregator/computation/ensemble/impl/filters/RetainWithProperty": {
+    "defaults": {
+      "inverse": false,
+      "mode": "ALL"
+    },
+    "schema": {
+      "description": "Retains all ids found as clusters in the provided aggregate with a entity with the corresponding properties",
+      "properites": {
+        "aggregate": {
+          "$ref": "#/definitions/AGGREGATE",
+          "description": "An relational aggregate"
+        },
+        "inverse": {
+          "description": "Filter items with a valid cluster, but WITHOUT the given property",
+          "type": "boolean"
+        },
+        "mode": {
+          "description": "Keep ids with ALL, ATLEAST_ONE or STANDARD of the properties",
+          "enum": [
+            "ALL",
+            "ATLEAST_ONE",
+            "STANDARD"
+          ],
+          "type": "string"
+        },
+        "properties": {
+          "description": "One or more externalIds of an entity in the relational aggregate",
+          "items": "string",
+          "type": "array"
+        }
+      }
+    },
+    "type": "filter"
+  },
+  "com/sannsyn/aggregator/computation/ensemble/impl/filters/ServiceCacheFilter": {
+    "defaults": {
+      "idType": "EXTERNAL_IDS",
+      "ttl": "1h"
+    },
+    "schema": {
+      "description": "Builds a cache-key from the classname, this instancename and the ids specified by idType.  If the service contains a cacheEntry on this key, it is returned.  If not, the result is computed normally and then cached.",
+      "properties": {
+        "clusterId": {
+          "description": "The external id of the cluster used to filter elements.  Only if clusterIdsource is CONFIG",
+          "type": "string"
+        },
+        "clusterIdSource": {
+          "description": "Use config.clusterId (eg. clusterId=cat1) to select a fixed cluster, use externalId to select first externalId, or use a specific parameter named in parameterName",
+          "enum": [
+            "CONFIG",
+            "EXTERNAL_ID",
+            "PARAMETER"
+          ],
+          "type": "string"
+        },
+        "idType": {
+          "description": "What ids should be used to build the cache-key.",
+          "enum": [
+            "EXTERNAL_IDS"
+          ],
+          "type": "string"
+        },
+        "invert": {
+          "description": "DEPRECATED, use mode instead. Select entities NOT in cluster",
+          "type": "boolean"
+        },
+        "missingClusterHandling": {
+          "description": "What action should be taken if the given clusterId is missing, either discard all or retain all",
+          "enum": [
+            "RETAIN_ALL",
+            "DISCARD_ALL"
+          ],
+          "type": "string"
+        },
+        "parameterName": {
+          "description": "If clusterIdSource is PARAMETER, this is the name where we expect to find the clusterId.",
+          "type": "string"
+        },
+        "ttl": {
+          "description": "Time to live for the cached values.(Duration expressed as 1d (one day), 32ms (32 milliseconds), 2h (2 hours)...)",
+          "type": "duration"
+        }
+      }
+    },
+    "type": "filter"
+  },
+  "com/sannsyn/aggregator/computation/ensemble/impl/filters/clusterentitymap/FilterByProperty": {
+    "defaults": {
+      "mode": "RETAIN"
+    },
+    "schema": {
+      "description": "Relies on a FilterUpdateListener to do the actual filtering.",
+      "properties": {
+        "filterUpdateListener": {
+          "$ref": "#/definitions/UPDATELISTENER_FILTER"
+        },
+        "mode": {
+          "enum": [
+            "RETAIN",
+            "CENSOR"
+          ],
+          "type": "string"
+        }
+      }
+    },
+    "type": "filter"
+  },
+  "com/sannsyn/aggregator/computation/ensemble/impl/pipes/AggregatePipe": {
+    "defaults": {},
+    "schema": {
+      "description": "Aggregates scores from multiple chains by id."
+    },
+    "type": "pipe"
+  },
+  "com/sannsyn/aggregator/computation/ensemble/impl/pipes/FallbackPipe": {
+    "defaults": {},
+    "schema": {
+      "description": "Selects the n-first items from the first source. If not enought items are found, the remaining items will be fetched from the next source, etc..."
+    },
+    "type": "pipe"
+  },
+  "com/sannsyn/aggregator/computation/ensemble/impl/pipes/FilterPipe": {
+    "defaults": {
+      "constantScore": 0,
+      "fromSource": 1,
+      "operation": "CUT",
+      "score": "FIRST"
+    },
+    "schema": {
+      "description": "Filters the inputs by the selected set operation and scores the filtered items by selected scoring method.",
+      "properties": {
+        "constantScore": {
+          "description": "In the case of score=CONSTANT, this is the score",
+          "type": "number"
+        },
+        "fromSource": {
+          "description": "In the case of operation=CUT, we may set the score from a specific input-source",
+          "type": "integer"
+        },
+        "operation": {
+          "description": "Filter the inputs by this operation, CUT=in all, UNIOIN=in one or more, XOR=in exactly one",
+          "enum": [
+            "CUT",
+            "UNION",
+            "XOR"
+          ],
+          "type": "string"
+        },
+        "score": {
+          "description": "How do we score the resulting items. FROM_SCORE should only be used with operation=CUT and the fromSource should be set.",
+          "enum": [
+            "FIRST",
+            "LAST",
+            "SUM",
+            "MAX",
+            "FROM_SOURCE",
+            "CONSTANT"
+          ],
+          "type": "string"
+        }
+      }
+    },
+    "type": "pipe"
+  },
+  "com/sannsyn/aggregator/computation/ensemble/impl/pipes/ForEachPipe": {
+    "defaults": {
+      "censorFromCluster": {
+        "enabled": false,
+        "idIndex": 0
+      },
+      "censorInputIds": true,
+      "externalIdIndex": 0,
+      "externalIdIndexFrom": 0,
+      "externalIdIndexTo": -1,
+      "multiExternalIds": [],
+      "subchain": [],
+      "unique": true
+    },
+    "schema": {
+      "description": "Repeats the subsource for each externalId in multiExternalIds",
+      "properties": {
+        "censorFromCluster": {
+          "properties": {
+            "aggregate": {
+              "$ref": "#/definitions/AGGREGATE_CLUSTER",
+              "description": "In what aggregate does the cluster live"
+            },
+            "enabled": {
+              "description": "Enable censoring from a cluster in an aggregate",
+              "type": "boolean"
+            },
+            "idIndex": {
+              "description": "Which of the multiExternalIds is the clusterId",
+              "type": "integer"
+            }
+          },
+          "type": "object"
+        },
+        "censorInputIds": {
+          "description": "Should we censor all ids matching an input id?",
+          "type": "boolean"
+        },
+        "multiExternalIds": {
+          "description": "The externalIds to use in this pipes  sources. This will override the externalId parameter.  Eg. [id1, id2].  ",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "subchain": {
+          "$ref": "#/definitions/CHAIN",
+          "description": "A chain configuration, eg. [a,b] on the same form as Ensamble.chain.  This will be executed for each externalId."
+        },
+        "unique": {
+          "description": "Should we ensure that only unique ids are recommended?",
+          "type": "boolean"
+        }
+      }
+    },
+    "type": "pipe"
+  },
+  "com/sannsyn/aggregator/computation/ensemble/impl/pipes/MultiIdPipe": {
+    "defaults": {
+      "censorFromCluster": {
+        "enabled": false,
+        "idIndex": 0
+      },
+      "censorInputIds": true,
+      "externalIdIndexFrom": 0,
+      "externalIdIndexTo": -1,
+      "selection": [
+        1
+      ],
+      "unique": true
+    },
+    "schema": {
+      "description": "Selects a number of items from each source.  Optionally each source might have its externalId overridden by otherExternalIds.  The number of results from each partresult is controlled by the selection attribute",
+      "properties": {
+        "censorFromCluster": {
+          "description": "Optionally, censor entities found in a specific cluster in a specific aggregate.",
+          "properties": {
+            "aggregate": {
+              "$ref": "#/definitions/AGGREGATE_CLUSTER",
+              "description": "In what aggregate does the cluster live"
+            },
+            "enabled": {
+              "description": "Enable censoring from a cluster in an aggregate",
+              "type": "boolean"
+            },
+            "idIndex": {
+              "description": "Which of the multiExternalIds is the clusterId",
+              "type": "integer"
+            }
+          },
+          "type": "object"
+        },
+        "censorInputIds": {
+          "description": "Should we censor all ids matching an input id?",
+          "type": "boolean"
+        },
+        "multiExternalIds": {
+          "description": "The externalIds to use in this pipes  sources. This will override the externalId parameter.  Eg. [id1, id2].  ",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "selection": {
+          "description": "The number of results to pick from each source. Eg. [2,1,2] pick 2 from the first source, 1 from the next and 2 from the last. Repeats until no more recommendations can be found.",
+          "items": {
+            "type": "integer"
+          },
+          "type": "array"
+        },
+        "unique": {
+          "description": "Should we ensure that only unique ids are recommended?",
+          "type": "boolean"
+        }
+      }
+    },
+    "type": "pipe"
+  },
+  "com/sannsyn/aggregator/computation/ensemble/impl/pipes/PipeMerge": {
+    "defaults": {},
+    "schema": {
+      "description": "Adds unique items from different sources, first to come is kept, following items are discarded."
+    },
+    "type": "pipe"
+  },
+  "com/sannsyn/aggregator/computation/ensemble/impl/producers/bm25/Bm25": {
+    "defaults": {
+      "b": 0.75,
+      "delta": 0,
+      "k": 1.5,
+      "minDocLength": 0,
+      "n": 10
+    },
+    "schema": {
+      "description": "Searches for documents matching terms.  For details see: http://en.wikipedia.org/wiki/Okapi_BM25",
+      "schema": {
+        "b": {
+          "description": "A free parameter, defaults to 0.75, values of 0 or 1 will turn the search into a ranking function.",
+          "type": "number"
+        },
+        "delta": {
+          "description": "A normalization constant, typical values are 0(default, standard bm25), or 1(bm25+)",
+          "type": "number"
+        },
+        "documentVector": {
+          "$ref": "#/definitions/AGGREGATE_CLUSTER",
+          "description": "A cluster aggregate where clusters are terms and entities are documents"
+        },
+        "externalIds": {
+          "description": "The terms to search for",
+          "items": "string",
+          "type": "array"
+        },
+        "k": {
+          "description": "A free parameter, defaults to 1.5, referred to as k1 in the litterature.",
+          "type": "number"
+        },
+        "termVector": {
+          "$ref": "#/definitions/AGGREGATE_CLUSTER",
+          "description": "A cluster aggregate where clusters are documents and entities are terms"
+        }
+      }
+    },
+    "type": "producer"
+  },
+  "com/sannsyn/aggregator/computation/ensemble/impl/producers/bm25/ExtractKeywordsBm25": {
+    "defaults": {
+      "b": 0.75,
+      "delta": 0,
+      "k": 1.5,
+      "minDocLength": 0,
+      "n": 10
+    },
+    "schema": {
+      "description": "Extracts keywords from a document.  The keywords are the terms in the document with the highest bm25 score related tot he document.  For details on bm25 score, see: http://en.wikipedia.org/wiki/Okapi_BM25",
+      "properties": {
+        "b": {
+          "description": "A free parameter, defaults to 0.75, values of 0 or 1 will turn the search into a ranking function.",
+          "type": "number"
+        },
+        "delta": {
+          "description": "A normalization constant, typical values are 0(default, standard bm25), or 1(bm25+)",
+          "type": "number"
+        },
+        "documentVector": {
+          "$ref": "#/definitions/AGGREGATE_CLUSTER",
+          "description": "A cluster aggregate where clusters are terms and entities are documents"
+        },
+        "externalId": {
+          "description": "The document to extract keywords from",
+          "type": "string"
+        },
+        "k": {
+          "description": "A free parameter, defaults to 1.5, referred to as k1 in the litterature.",
+          "type": "number"
+        },
+        "termVector": {
+          "$ref": "#/definitions/AGGREGATE_CLUSTER",
+          "description": "A cluster aggregate where clusters are documents and entities are terms"
+        }
+      }
+    },
+    "type": "producer"
+  },
+  "com/sannsyn/aggregator/computation/ensemble/impl/producers/bm25/MetaKeywordsBm25": {
+    "defaults": {
+      "bm25": {
+        "class": "com.sannsyn.aggregator.computation.ensemble.impl.producers.bm25.Bm25"
+      },
+      "metaExtractor": {
+        "class": "com.sannsyn.aggregator.computation.ensemble.impl.producers.bm25.ExtractKeywordsBm25"
+      },
+      "n": 10,
+      "singleExtractor": {
+        "class": "com.sannsyn.aggregator.computation.ensemble.impl.producers.bm25.ExtractKeywordsBm25"
+      }
+    },
+    "schema": {
+      "properties": {
+        "bm25": {
+          "descripion": "Any specific configuration to the internal bm25 searcher can be added here.",
+          "properties": {
+            "class": {
+              "description": "The class used to perform the search",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "documentVector": {
+          "$ref": "#/definitions/AGGREGATE_CLUSTER",
+          "description": "A cluster aggregate where clusters are terms and entities are documents"
+        },
+        "metaExtractor": {
+          "description": "The component used to extract keywords, add component specific configuration to this.",
+          "properties": {
+            "class": {
+              "description": "Use this to select the component that extract metakeywords.",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "singleExtractor": {
+          "description": "The component used to extract keywords, add component specific configuration to this.",
+          "properties": {
+            "class": {
+              "description": "Use this to select the component that extracts keywords.",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "termVector": {
+          "$ref": "#/definitions/AGGREGATE_CLUSTER",
+          "description": "A cluster aggregate where clusters are documents and entities are terms"
+        }
+      }
+    },
+    "type": "producer"
+  },
+  "com/sannsyn/aggregator/computation/ensemble/impl/producers/bm25/RelatedDistancesBm25": {
+    "defaults": {
+      "bm25": {
+        "class": "com.sannsyn.aggregator.computation.ensemble.impl.producers.bm25.Bm25"
+      },
+      "keywordextractor": {
+        "class": "com.sannsyn.aggregator.computation.ensemble.impl.producers.bm25.ExtractKeywordsBm25"
+      },
+      "metaExtractor": {
+        "class": "com.sannsyn.aggregator.computation.ensemble.impl.producers.bm25.MetaKeywordsBm25"
+      },
+      "n": 10
+    },
+    "schema": {
+      "properties": {
+        "bm25": {
+          "descripion": "Any specific configuration to the internal bm25 searcher can be added here.",
+          "properties": {
+            "class": {
+              "description": "The class used to perform the search",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "documentVector": {
+          "$ref": "#/definitions/AGGREGATE_CLUSTER",
+          "description": "A cluster aggregate where clusters are terms and entities are documents"
+        },
+        "keywordextractor": {
+          "description": "The component used to extract keywords, add component specific configuration to this.",
+          "properties": {
+            "class": {
+              "description": "Use this to select the component that extracts keywords.",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "metaExtractor": {
+          "description": "The component used to extract keywords, add component specific configuration to this.",
+          "properties": {
+            "class": {
+              "description": "Use this to select the component that extract metakeywords.",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "termVector": {
+          "$ref": "#/definitions/AGGREGATE_CLUSTER",
+          "description": "A cluster aggregate where clusters are documents and entities are terms"
+        }
+      }
+    },
+    "type": "producer"
+  },
+  "com/sannsyn/aggregator/computation/ensemble/impl/producers/bm25/RelatedDocumentsBm25": {
+    "defaults": {
+      "bm25": {
+        "class": "com.sannsyn.aggregator.computation.ensemble.impl.producers.bm25.Bm25"
+      },
+      "keywordextractor": {
+        "class": "com.sannsyn.aggregator.computation.ensemble.impl.producers.bm25.ExtractKeywordsBm25"
+      },
+      "meta": false,
+      "metakeywordextractor": {
+        "class": "com.sannsyn.aggregator.computation.ensemble.impl.producers.bm25.MetaKeywordsBm25"
+      },
+      "n": 10
+    },
+    "schema": {
+      "properties": {
+        "bm25": {
+          "descripion": "Any specific configuration to the internal bm25 searcher can be added here.",
+          "properties": {
+            "class": {
+              "description": "The class used to perform the search",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "documentVector": {
+          "$ref": "#/definitions/AGGREGATE_CLUSTER",
+          "description": "A cluster aggregate where clusters are terms and entities are documents"
+        },
+        "keywordextractor": {
+          "description": "The component used to extract keywords, add component specific configuration to this.",
+          "properties": {
+            "class": {
+              "description": "Use this to select the component that extracts keywords.",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "meta": {
+          "description": "Use metakeywords to find related documents",
+          "type": "boolean"
+        },
+        "metakeywordextractor": {
+          "description": "The component used to extract keywords, add component specific configuration to this.",
+          "properties": {
+            "class": {
+              "description": "Use this to select the component that extract metakeywords.",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "termVector": {
+          "$ref": "#/definitions/AGGREGATE_CLUSTER",
+          "description": "A cluster aggregate where clusters are documents and entities are terms"
+        }
+      }
+    },
+    "type": "producer"
+  },
+  "com/sannsyn/aggregator/computation/ensemble/impl/producers/bm25/TermVectorDistance": {
+    "defaults": {
+      "minDocLength": -1
+    },
+    "schema": {
+      "properties": {
+        "documentId1": {
+          "type": "string"
+        },
+        "documentId2": {
+          "type": "string"
+        },
+        "minDocLength": {
+          "type": "integer"
+        },
+        "termVector": {
+          "$ref": "#/definitions/AGGREGATE_CLUSTER",
+          "description": "A cluster aggregate where clusters are documents and entities are terms"
+        }
+      }
+    },
+    "type": "producer"
+  },
+  "com/sannsyn/aggregator/computation/ensemble/impl/producers/general/AllClustersByScore": {
+    "defaults": {
+      "constant": 1,
+      "limit": 100,
+      "score": "constant",
+      "selection": "all"
+    },
+    "schema": {
+      "description": "Returns all clusters in an aggregate, scored by popularity or count.",
+      "properties": {
+        "aggregate": {
+          "$ref": "#/definitions/AGGREGATE_RELATIONAL",
+          "description": "The aggregate where we can find entities"
+        },
+        "constant": {
+          "description": "If score is constant, this is what is returned.",
+          "type": "float"
+        },
+        "limit": {
+          "description": "Used to limit the number of entities for all selections but ALL",
+          "type": "integer"
+        },
+        "score": {
+          "description": "Popularity or count",
+          "enum": [
+            "POPULARITY",
+            "CONSTANT",
+            "COUNT"
+          ],
+          "type": "string"
+        },
+        "selection": {
+          "description": "What entities, all, limit, random(possible duplicates), random_unique(no duplicates but more expensive)",
+          "enum": [
+            "ALL",
+            "LIMIT",
+            "RANDOM",
+            "RANDOM_UNIQUE"
+          ],
+          "type": "string"
+        }
+      }
+    },
+    "type": "producer"
+  },
+  "com/sannsyn/aggregator/computation/ensemble/impl/producers/general/AllEntitiesByScore": {
+    "defaults": {
+      "limit": 100,
+      "score": "constant",
+      "selection": "all"
+    },
+    "schema": {
+      "description": "Returns all entities in an aggregate, scored by popularity or count.",
+      "properties": {
+        "aggregate": {
+          "$ref": "#/definitions/AGGREGATE",
+          "description": "The aggregate where we can find entities"
+        },
+        "limit": {
+          "description": "Used to limit the number of entities for all selections but ALL",
+          "type": "integer"
+        },
+        "score": {
+          "description": "Popularity or count",
+          "enum": [
+            "POPULARITY",
+            "CONSTANT",
+            "COUNT"
+          ],
+          "type": "string"
+        },
+        "selection": {
+          "description": "What entities, all, limit, random(possible duplicates), random_unique(no duplicates but more expensive)",
+          "enum": [
+            "ALL",
+            "LIMIT",
+            "RANDOM",
+            "RANDOM_UNIQUE"
+          ],
+          "type": "string"
+        }
+      }
+    },
+    "type": "producer"
+  },
+  "com/sannsyn/aggregator/computation/ensemble/impl/producers/general/BayesRecommender": {
+    "defaults": {
+      "agregateMethod": "SUM",
+      "censorOwnEntities": true,
+      "doEntropyAdjust": false,
+      "doSourceAdjust": false,
+      "entropyCountAdjust": 1,
+      "entropyExponentAdjust": 1,
+      "retainAggregate": null,
+      "sourceCountAdjust": 1,
+      "sourceExponentAdjust": 1
+    },
+    "schema": {
+      "description": "Returns Weighted C's from A(Cluster) -> B(Entity) -> C(Entity). C's are weighted with P(B|A)*P(C|B) for each B and then summed up for all B's in A. Optionally, if doSourceAdjust=true, we weight the attribution of each B according to an inverse funcion of its count. Use sourceCountAdjust[=1] and sourceExponentAdjust[=1] to adjust. Items are selected from parameter aggregate. Items may be filtered so they only contain items in parameter retainAggregate",
+      "properties": {
+        "aggregate": {
+          "$ref": "#/definitions/AGGREGATE_COOCCURRENCES",
+          "description": "The aggregate containing the data, must be of type Cooccurence"
+        },
+        "agregateMethod": {
+          "enum": [
+            "SUM",
+            "MAX"
+          ],
+          "type": "string"
+        },
+        "censorOwnEntities": {
+          "type": "boolean"
+        },
+        "doEntropyAdjust": {
+          "type": "boolean"
+        },
+        "doSourceAdjust": {
+          "type": "boolean"
+        },
+        "entropyCountAdjust": {
+          "type": "integer"
+        },
+        "entropyExponentAdjust": {
+          "type": "number"
+        },
+        "retainAggregate": {
+          "description": "Retain items found in this aggregate",
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/AGGREGATE"
+            }
+          ]
+        },
+        "sourceCountAdjust": {
+          "type": "integer"
+        },
+        "sourceExponentAdjust": {
+          "type": "number"
+        }
+      }
+    },
+    "type": "producer"
+  },
+  "com/sannsyn/aggregator/computation/ensemble/impl/producers/general/ByTime": {
+    "defaults": {
+      "from": null,
+      "maxAge": "1d",
+      "maxCacheAge": "1d",
+      "minAge": "0s",
+      "to": null,
+      "useCache": true
+    },
+    "schema": {
+      "description": "Returns all entities in the given timeframe.",
+      "properties": {
+        "from": {
+          "description": "A date yyyy-MM-ddTHH:mm:ss, this will override maxAge.",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "maxAge": {
+          "$ref": "#/definitions/duration",
+          "description": "The maximum age of an entity"
+        },
+        "maxCacheAge": {
+          "$ref": "#/definitions/duration",
+          "description": "How long should the results be cached."
+        },
+        "minAge": {
+          "$ref": "#/definitions/duration",
+          "description": "The minimum age of an entity"
+        },
+        "timestamps": {
+          "$ref": "#/definitions/AGGREGATE_TIMESTAMPS",
+          "description": "An aggregate of type timestamps"
+        },
+        "to": {
+          "description": "A date yyyy-MM-ddTHH:mm:ss, this will override minAge.",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "useCache": {
+          "description": "Should the results be cahced?  Recommended!",
+          "type": "boolean"
+        }
+      }
+    },
+    "type": "producer"
+  },
+  "com/sannsyn/aggregator/computation/ensemble/impl/producers/general/CategorySelector": {
+    "defaults": {
+      "cache": true,
+      "cacheTime": "10m",
+      "categories": [],
+      "censorSelf": true,
+      "criteria": "IN_ALL",
+      "type": "producer"
+    },
+    "schema": {
+      "description": "Asumes aggregates Category -> Entities, selects all entities in the categories given in 'categories' or if this is empty, the externalIds",
+      "properties": {
+        "cache": {
+          "description": "Should we cache the results based on the criterias of the externalId?",
+          "type": "boolean"
+        },
+        "cacheTime": {
+          "$ref": "#/definitions/duration",
+          "description": "How long should results be cached?"
+        },
+        "categories": {
+          "description": "Static set of categories, if this is empty, the externalIds will be used.",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "categoryEntityAggregate": {
+          "$ref": "#/definitions/AGGREGATE_RELATIONAL",
+          "description": "The aggregate where we can lookup entities for a given category"
+        },
+        "censorSelf": {
+          "description": "Should we censor results with same id as externalId?",
+          "type": "boolean"
+        },
+        "criteria": {
+          "description": "What selection criteria should we use?  Must entities be in all categories of the externalId or is at least one sufficient?",
+          "enum": [
+            "IN_ALL",
+            "IN_ONE"
+          ],
+          "type": "string"
+        }
+      }
+    },
+    "type": "filter"
+  },
+  "com/sannsyn/aggregator/computation/ensemble/impl/producers/general/ConstantStringProducer": {
+    "defaults": {},
+    "schema": {
+      "description": "This produces a single constantly scored string.",
+      "properties": {
+        "text": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "text"
+      ]
+    },
+    "type": "producer"
+  },
+  "com/sannsyn/aggregator/computation/ensemble/impl/producers/general/EmptyProducer": {
+    "defaults": {},
+    "schema": {
+      "description": "This returns an empty list."
+    },
+    "type": "producer"
+  },
+  "com/sannsyn/aggregator/computation/ensemble/impl/producers/general/EntitiesInCluster": {
+    "defaults": {
+      "score": "CONSTANT"
+    },
+    "schema": {
+      "description": "Returns all entities in a cluster identified by the externalId.",
+      "properties": {
+        "aggregate": {
+          "$ref": "#/definitions/AGGREGATE_RELATIONAL",
+          "description": "The aggregate where we can find the cluster"
+        },
+        "score": {
+          "description": "Popularity, count or constant",
+          "enum": [
+            "POPULARITY",
+            "CONSTANT",
+            "COUNT"
+          ],
+          "type": "string"
+        }
+      }
+    },
+    "type": "producer"
+  },
+  "com/sannsyn/aggregator/computation/ensemble/impl/producers/general/EntityEntityCoOccurrenceRecommender": {
+    "defaults": {
+      "normalizePop": {
+        "from": 1,
+        "sigmoid": true,
+        "to": 2
+      }
+    },
+    "schema": {
+      "description": "Recommendes entities for other entities.",
+      "properites": {
+        "aggregate": {
+          "$ref": "#/definitions/AGGREGATE_COOCCURRENCES",
+          "description": "A cooccurence aggregate."
+        },
+        "normalizePop": {
+          "properties": {
+            "from": {
+              "description": "Normalize into this range, from",
+              "type": "number"
+            },
+            "sigmoid": {
+              "description": "Use a sigmoid function to normalize popularity, if false, a linear normalization is used.",
+              "type": "boolean"
+            },
+            "to": {
+              "description": "Normalize into this range, to",
+              "type": "number"
+            }
+          },
+          "type": "object"
+        }
+      }
+    },
+    "type": "producer"
+  },
+  "com/sannsyn/aggregator/computation/ensemble/impl/producers/general/EntityEntityCoOccurrenceRecommenderNormal": {
+    "defaults": {
+      "countAdjustExp": 0.5,
+      "normalizePop": {
+        "from": 1,
+        "sigmoid": true,
+        "to": 2
+      }
+    },
+    "schema": {
+      "description": "Recommendes entities for other entities.",
+      "properties": {
+        "aggregate": {
+          "$ref": "#/definitions/AGGREGATE_COOCCURRENCES",
+          "description": "A cooccurence aggregate.  May omit this if weights.corr=0."
+        },
+        "countAdjustExp": {
+          "description": "Adjust total counts by this exponent",
+          "type": "number"
+        },
+        "normalizePop": {
+          "properties": {
+            "from": {
+              "description": "Normalize into this range, from",
+              "type": "number"
+            },
+            "sigmoid": {
+              "description": "Use a sigmoid function to normalize popularity, if false, a linear normalization is used.",
+              "type": "boolean"
+            },
+            "to": {
+              "description": "Normalize into this range, to",
+              "type": "number"
+            }
+          },
+          "type": "object"
+        }
+      }
+    },
+    "type": "producer"
+  },
+  "com/sannsyn/aggregator/computation/ensemble/impl/producers/general/EntitySiblingsForCluster": {
+    "defaults": {
+      "censorOwnEntities": true
+    },
+    "schema": {
+      "description": "Returns all entities in clusters that have common entities with the given cluster. cluster -> clusters with common entities -> entities -> counted and weighted",
+      "properties": {
+        "aggregate": {
+          "$ref": "#/definitions/AGGREGATE_COOCCURRENCES",
+          "description": "The aggregate"
+        },
+        "censorOwnEntities": {
+          "type": "boolean"
+        }
+      }
+    },
+    "type": "producer"
+  },
+  "com/sannsyn/aggregator/computation/ensemble/impl/producers/general/EqualCategorySelector": {
+    "defaults": {
+      "cache": true,
+      "cacheTime": "10m",
+      "censorSelf": true,
+      "criteria": "IN_ONE"
+    },
+    "schema": {
+      "description": "Asumes aggregates Category -> Entities and Entities -> Categories, selects all entities in the same Category(c -> e) as the externalId is(e -> c). e(externalId)-> c -> e",
+      "properties": {
+        "cache": {
+          "description": "Should we cache the results based on the criterias of the externalId?",
+          "type": "boolean"
+        },
+        "cacheTime": {
+          "$ref": "#/definitions/duration",
+          "description": "How long should results be cached?"
+        },
+        "categoryEntityAggregate": {
+          "$ref": "#/definitions/AGGREGATE_RELATIONAL",
+          "description": "The aggregate where we can lookup entities for a given category"
+        },
+        "censorSelf": {
+          "description": "Should we censor results with same id as externalId?",
+          "type": "boolean"
+        },
+        "criteria": {
+          "description": "What selection criteria should we use?  Must entities be in all categories of the externalId or is at least one sufficient?",
+          "enum": [
+            "IN_ALL",
+            "IN_ONE"
+          ],
+          "type": "string"
+        },
+        "entityCategoryAggregate": {
+          "$ref": "#/definitions/AGGREGATE_RELATIONAL",
+          "description": "The aggregate where we can lookup a category from the externalId"
+        }
+      }
+    },
+    "type": "producer"
+  },
+  "com/sannsyn/aggregator/computation/ensemble/impl/producers/general/ExternalIdsToInput": {
+    "defaults": {
+      "idsource": null,
+      "weight": "UNIFORM"
+    },
+    "schema": {
+      "description": "Picks up the externalIds or idsource and produces an output scored uniformly or by rank.",
+      "properties": {
+        "idsource": {
+          "description": "Pick up ids from this instead of externalIds",
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            }
+          ]
+        },
+        "weight": {
+          "description": "What kind of score shoud we use",
+          "enum": [
+            "UNIFORM",
+            "RANK"
+          ],
+          "type": "string"
+        }
+      }
+    },
+    "type": "producer"
+  },
+  "com/sannsyn/aggregator/computation/ensemble/impl/producers/general/LogLikelihoodClusterEntityRecommender": {
+    "defaults": {
+      "popularityAdjust": true
+    },
+    "schema": {
+      "description": "Cluster - entity recommender.  Returns the top log-likelihood ratio siblings of each of the entities in the given cluster.",
+      "properties": {
+        "aggregate": {
+          "$ref": "#/definitions/AGGREGATE_COOCCURRENCES",
+          "description": "The aggregate containing the data, must be of type Cooccurence(or strictly speaking, the entities must be CoOccurenceEntities)"
+        }
+      }
+    },
+    "type": "producer"
+  },
+  "com/sannsyn/aggregator/computation/ensemble/impl/producers/general/LogLikelihoodSiblingRecommender": {
+    "defaults": {},
+    "schema": {
+      "description": "Entity - entity recommender.  Returns the top log-likelihood ratio siblings of the given entity.",
+      "properties": {
+        "aggregate": {
+          "$ref": "#/definitions/AGGREGATE_COOCCURRENCES",
+          "description": "The aggregate containing the data, must be of type Cooccurence(or strictly speaking, the entities must be CoOccurenceEntities)"
+        }
+      }
+    },
+    "type": "producer"
+  },
+  "com/sannsyn/aggregator/computation/ensemble/impl/producers/general/MostPopularEntities": {
+    "defaults": {
+      "cacheTime": "10m",
+      "constantNFactor": 2,
+      "constantNTerm": 10
+    },
+    "schema": {
+      "description": "Returns the most popular entities in some aggregate, results are cached with slightly larger n.",
+      "properties": {
+        "aggregate": {
+          "$ref": "#/definitions/AGGREGATE",
+          "description": "An aggregate to look for popular entities in."
+        },
+        "cacheTime": {
+          "$ref": "#/definitions/duration",
+          "description": "The time this will be cached"
+        },
+        "constantNFactor": {
+          "description": "The number of items that wil be cached is constantNFactor*(constantNTerm + n)",
+          "type": "integer"
+        },
+        "constantNTerm": {
+          "description": "The number of items that wil be cached is constantNFactor*(constantNTerm + n)",
+          "type": "integer"
+        }
+      }
+    },
+    "type": "producer"
+  },
+  "com/sannsyn/aggregator/computation/ensemble/impl/producers/general/RecommendRecentEntitiesForCluster": {
+    "defaults": {
+      "censorOwnEntities": true,
+      "countAdjust": 1,
+      "countExp": 1,
+      "weightType": "CONSTANT"
+    },
+    "schema": {
+      "properties": {
+        "aggregate": {
+          "$ref": "#/definitions/AGGREGATE_COOCCURRENCES",
+          "description": "The aggregate containing the data, must be of type Cooccurence"
+        },
+        "censorOwnEntities": {
+          "description": "Should we omit entities already present in the cluster",
+          "type": "boolean"
+        },
+        "countAdjust": {
+          "description": "If weightMethod is RELATIVECOUNTADJUSTED, this will be used in weight = siblingcount/(countAdjust + otherCount)^countExp",
+          "type": "number"
+        },
+        "countExp": {
+          "description": "If weightMethod is RELATIVECOUNTADJUSTED, this will be used in weight = siblingcount/(countAdjust + otherCount)^countExp",
+          "type": "number"
+        },
+        "filterUpdateListener": {
+          "$ref": "#/definitions/AGGREGATE_TIMESTAMPS",
+          "description": "Where to find recent entities"
+        },
+        "weightType": {
+          "enum": [
+            "CONSTANT",
+            "COUNT",
+            "RELATIVECOUNT",
+            "RELATIVECOUNTADJUSTED",
+            "LOGCOUNT"
+          ],
+          "type": "string"
+        }
+      }
+    },
+    "type": "producer"
+  },
+  "com/sannsyn/aggregator/computation/ensemble/impl/producers/general/RecommendRecentEntitiesForEntity": {
+    "defaults": {
+      "censorOwnEntities": true,
+      "countAdjust": 1,
+      "countExp": 1,
+      "weightType": "CONSTANT"
+    },
+    "schema": {
+      "properties": {
+        "aggregate": {
+          "$ref": "#/definitions/AGGREGATE_COOCCURRENCES",
+          "description": "The aggregate containing the data, must be of type Cooccurence(or at least its entities mus be)."
+        },
+        "censorOwnEntities": {
+          "description": "Should we omit entities already present in the cluster",
+          "type": "boolean"
+        },
+        "countAdjust": {
+          "description": "If weightMethod is RELATIVECOUNTADJUSTED, this will be used in weight = siblingcount/(countAdjust + otherCount)^countExp",
+          "type": "number"
+        },
+        "countExp": {
+          "description": "If weightMethod is RELATIVECOUNTADJUSTED, this will be used in weight = siblingcount/(countAdjust + otherCount)^countExp",
+          "type": "number"
+        },
+        "filterUpdateListener": {
+          "$ref": "#/definitions/AGGREGATE_TIMESTAMPS",
+          "description": "Where to find recent entities"
+        },
+        "weightType": {
+          "enum": [
+            "CONSTANT",
+            "COUNT",
+            "RELATIVECOUNT",
+            "RELATIVECOUNTADJUSTED"
+          ],
+          "type": "string"
+        }
+      }
+    },
+    "type": "producer"
+  },
+  "com/sannsyn/aggregator/computation/ensemble/impl/producers/general/RoundRobinClusterEntity": {
+    "defaults": {
+      "censorOwnEntities": true,
+      "countAdjust": 1,
+      "countExponent": 1,
+      "popAdjust": 1,
+      "popExp": 1,
+      "popularityAggregate": null,
+      "usePopularity": false
+    },
+    "schema": {
+      "properties": {
+        "aggregate": {
+          "$ref": "#/definitions/AGGREGATE_COOCCURRENCES",
+          "description": "The aggregate containing the data, must be of type Cooccurence"
+        },
+        "censorOwnEntities": {
+          "description": "Should we not include entities in the given cluster(externalId)",
+          "type": "boolean"
+        },
+        "countAdjust": {
+          "description": "Constant added to count in the denominator.  Use large number to decrese the significance of count.",
+          "type": "integer"
+        },
+        "countExponent": {
+          "description": "The sum of count and countAdjust is raised to this exponent. Typical values are in 0.1 - 1",
+          "type": "number"
+        },
+        "popAdjust": {
+          "description": "Constant added to each popularity. Use large numbers to decrease the significance of popularity.",
+          "type": "number"
+        },
+        "popExp": {
+          "description": "The sum of popAdjust and the actual popularity is exponentiated with this.",
+          "type": "number"
+        },
+        "popularityAggregate": {
+          "description": "To use a different source of popularity than the aggregate, include an aggregate where the popularities of entities may be fetched.",
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/AGGREGATE_ENTITY"
+            }
+          ]
+        },
+        "usePopularity": {
+          "description": "Use popularity as the rankning nominator, if not, use count.",
+          "type": "boolean"
+        }
+      }
+    },
+    "type": "producer"
+  },
+  "com/sannsyn/aggregator/computation/ensemble/impl/producers/semantic/SemanticCloudEntityClusterRecommender": {
+    "defaults": {
+      "censorClustersWithEntity": true,
+      "relatedDocuments": {
+        "bm25": {
+          "class": "com.sannsyn.aggregator.computation.ensemble.impl.producers.bm25.Bm25"
+        },
+        "keywordextractor": {
+          "class": "com.sannsyn.aggregator.computation.ensemble.impl.producers.bm25.ExtractKeywordsBm25"
+        },
+        "meta": false,
+        "metakeywordextractor": {
+          "class": "com.sannsyn.aggregator.computation.ensemble.impl.producers.bm25.MetaKeywordsBm25"
+        },
+        "n": 25
+      }
+    },
+    "schema": {
+      "description": "Finds clusters with semantically similar entities as the one identified by the externalId",
+      "properties": {
+        "censorClustersWithEntity": {
+          "description": "Do not include clusters that have a direct relation to the entity.",
+          "type": "boolean"
+        },
+        "clusterEntityAggregate": {
+          "$ref": "#/definitions/AGGREGATE_COOCCURRENCES",
+          "description": "Where the clusters and entiteis may be found."
+        },
+        "clusterEntityAggregateInverse": {
+          "$ref": "#/definitions/AGGREGATE_COOCCURRENCES",
+          "description": "Where the clusters are entities and the entities are clusters..."
+        },
+        "relatedDocuments": {
+          "properties": {
+            "bm25": {
+              "properties": {
+                "class": {
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "documentVector": {
+              "$ref": "#/definitions/AGGREGATE_CLUSTER",
+              "description": "Used by the keywordextractor, the metakeywordsextractor and the bm25 searer.  A cluster aggregate where clusters are terms and entities are documents"
+            },
+            "keywordextractor": {
+              "properties": {
+                "class": {
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "meta": {
+              "description": "Use metakeywords in comparison.",
+              "type": "boolean"
+            },
+            "metakeywordextractor": {
+              "properties": {
+                "class": {
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "n": {
+              "description": "The number of clusters to return",
+              "type": "integer"
+            },
+            "termVector": {
+              "$ref": "#/definitions/AGGREGATE_CLUSTER",
+              "description": "Used by the keywordextractor, the metakeywordsextractor and the bm25 searer.  A cluster aggregate where clusters are documents and entities are terms"
+            }
+          },
+          "type": "object"
+        }
+      }
+    },
+    "type": "producer"
+  },
+  "com/sannsyn/aggregator/computation/ensemble/impl/producers/stream/StreamEntityEntityRecommender": {
+    "defaults": {
+      "censorOwnEntities": true,
+      "weights": {
+        "corr": 1,
+        "count": 1
+      }
+    },
+    "schema": {
+      "properties": {
+        "censorOwnEntities": {
+          "type": "boolean"
+        },
+        "weights": {
+          "aggregate": {
+            "$ref": "#/definitions/AGGREGATE_COOCCURRENCES",
+            "description": "The aggregate"
+          },
+          "properties": {
+            "corr": {
+              "type": "number"
+            },
+            "count": {
+              "type": "integer"
+            }
+          },
+          "streamAggregate": {
+            "$ref": "#/definitions/AGGREGATE_STREAM",
+            "description": "The aggregate"
+          },
+          "type": "object"
+        }
+      }
+    },
+    "type": "producer"
+  },
+  "com/sannsyn/aggregator/computation/ensemble/impl/transforms/AggregateFilter": {
+    "defaults": {},
+    "schema": {
+      "description": "Aggregates scores by id."
+    },
+    "type": "filter"
+  },
+  "com/sannsyn/aggregator/computation/ensemble/impl/transforms/ClustersToEntities": {
+    "defaults": {},
+    "schema": {
+      "description": "Treats the result as Clusters in the given aggregate, fetches all entities related to these customers.  Each entity keeps their clusters score.  Entities are NOT aggregated.",
+      "properties": {
+        "aggregate": {
+          "$ref": "#/definitions/AGGREGATE_RELATIONAL",
+          "description": "The aggregate where we can lookup the clusters and fetch the entities."
+        }
+      }
+    },
+    "type": "transform"
+  },
+  "com/sannsyn/aggregator/computation/ensemble/impl/transforms/ExposureAdjust": {
+    "defaults": {
+      "countAdjust": 1,
+      "expAdjust": 1.5
+    },
+    "schema": {
+      "description": "For every id in the input, we look it up as an entity in a cluster given by the externalId in the exposureAggregate and reduce its weight by a function of its exposure",
+      "properties": {
+        "aggregate": {
+          "$ref": "#/definitions/AGGREGATE_CLUSTERCOUNT",
+          "description": "The aggregate where we lookup the counts for the given cluster."
+        },
+        "countAdjust": {
+          "description": "A constant used in the transformation.",
+          "type": "number"
+        },
+        "expAdjust": {
+          "description": "A constant used in the transformation.",
+          "type": "number"
+        }
+      }
+    },
+    "type": "transform"
+  },
+  "com/sannsyn/aggregator/computation/ensemble/impl/transforms/FrequencyAdjust": {
+    "defaults": {
+      "aggregateRelation": "ENTITY",
+      "countAdjust": 1
+    },
+    "schema": {
+      "description": "Adjusts the scores of the input by score = score/(c + count).",
+      "properties": {
+        "aggregate": {
+          "$ref": "#/definitions/AGGREGATE_ENTITY",
+          "description": "The aggregate where we can lookup the counts."
+        },
+        "aggregateRelation": {
+          "$ref": "#/definitions/AGGREGATE_RELATION",
+          "description": "Should the count be fetched from entities or clusters. NOTE, if the relation is CLUSTER, the aggregate must be relational."
+        },
+        "countAdjust": {
+          "description": "A constant(the c above) used in the transformation.",
+          "type": "number"
+        }
+      }
+    },
+    "type": "transform"
+  },
+  "com/sannsyn/aggregator/computation/ensemble/impl/transforms/FrequencyExponentialAdjust": {
+    "defaults": {
+      "aggregateRelation": "ENTITY",
+      "countAdjust": 1,
+      "freqExponent": 0.5
+    },
+    "schema": {
+      "description": "Adjusts the scores of the input by score = score/(c + count)^p.",
+      "properties": {
+        "aggregate": {
+          "$ref": "#/definitions/AGGREGATE_ENTITY",
+          "description": "The aggregate where we can lookup the counts."
+        },
+        "aggregateRelation": {
+          "$ref": "#/definitions/AGGREGATE_RELATION",
+          "description": "Should the count be fetched from entities or clusters. NOTE, if the relation is CLUSTER, the aggregate must be relational."
+        },
+        "countAdjust": {
+          "description": "A constant(the c above) used in the transformation.",
+          "type": "number"
+        },
+        "freqExponent": {
+          "description": "A constant(the p above) used in the transformation.",
+          "type": "number"
+        }
+      }
+    },
+    "type": "transform"
+  },
+  "com/sannsyn/aggregator/computation/ensemble/impl/transforms/NormalizeAdjust": {
+    "defaults": {
+      "into": {
+        "max": 1,
+        "min": 0,
+        "width": 3
+      },
+      "method": "LINEAR"
+    },
+    "schema": {
+      "description": "Normalizes the given values.",
+      "properties": {
+        "into": {
+          "properties": {
+            "max": {
+              "description": "Maximum of normalized values",
+              "type": "number"
+            },
+            "min": {
+              "description": "Minimum of normalized values",
+              "type": "number"
+            },
+            "width": {
+              "description": "If method is SIGMOID, this signifies the steepness of the function",
+              "type": "number"
+            }
+          },
+          "type": "object"
+        },
+        "method": {
+          "enum": [
+            "LINEAR",
+            "SIGMOID"
+          ],
+          "type": "string"
+        }
+      }
+    },
+    "type": "transform"
+  },
+  "com/sannsyn/aggregator/computation/ensemble/impl/transforms/PopularityAdjust": {
+    "defaults": {
+      "into": {
+        "max": 1,
+        "min": 0,
+        "width": 3
+      },
+      "isEntitiy": true,
+      "normalization": "NONE",
+      "scoreAsAdjustmentOnly": false,
+      "sigmoidNormalize": false,
+      "stdNormalize": false
+    },
+    "schema": {
+      "description": "Adjusts the result by popularity.  If stdNormalize, popularities will be linearly normalized before adjusting, if sigmoidNormalize, the popularities will be fitted to a sigmoid function.",
+      "properties": {
+        "aggregate": {
+          "$ref": "#/definitions/AGGREGATE",
+          "description": "The aggregate containing the data, any aggregate if isEntity, a clusterAggregate if not isEntity."
+        },
+        "into": {
+          "properties": {
+            "max": {
+              "description": "Upper end of range, only applicable to sigmoid",
+              "type": "number"
+            },
+            "min": {
+              "description": "Lower end of range",
+              "type": "number"
+            },
+            "widht": {
+              "description": "Slope, only applicable to sigmoid",
+              "type": "number"
+            }
+          },
+          "type": "object"
+        },
+        "isEntity": {
+          "description": "Should popularities be fetched from the entities of the given aggregate, or if false, from the clusters",
+          "type": "boolean"
+        },
+        "normalization": {
+          "description": "Should the popularities be normalized before they are applied, and if so, how?",
+          "enum": [
+            "NONE",
+            "LINEAR",
+            "SIGMOID"
+          ],
+          "type": "string"
+        },
+        "scoreAsAdjustmentOnly": {
+          "description": "If true, the adjustment will be the final score, if not, the adjustment is multiplied with the existing score.",
+          "type": "boolean"
+        },
+        "sigmoidNormalize": {
+          "description": "DEPRECATED, use normalization=SIGMOID, If true, the normalizer will use a sigmoid function built on the data to normalize",
+          "type": "boolean"
+        },
+        "stdNormalize": {
+          "description": "DEPRECATED, use normalization=LINEAR, If true, the normalizer will use a linear function built on the data to normalize",
+          "type": "boolean"
+        }
+      }
+    },
+    "type": "transform"
+  },
+  "com/sannsyn/aggregator/computation/ensemble/impl/transforms/RestoreOriginalExternalIds": {
+    "defaults": {},
+    "schema": {
+      "description": "Restores the externalIds to the state they where in before SelectExternalIds was used.",
+      "properties": {}
+    },
+    "type": "transform"
+  },
+  "com/sannsyn/aggregator/computation/ensemble/impl/transforms/RndScore": {
+    "defaults": {
+      "lowerBound": 0,
+      "upperBound": 1
+    },
+    "schema": {
+      "description": "Replaces the scores in the input with random values.",
+      "properties": {
+        "lowerBound": {
+          "description": "Lower bound on the randomvalues.",
+          "type": "number"
+        },
+        "upperBound": {
+          "description": "Uppder bound on the randomvalues.",
+          "type": "number"
+        }
+      }
+    },
+    "type": "transform"
+  },
+  "com/sannsyn/aggregator/computation/ensemble/impl/transforms/RoundRobinEntities": {
+    "defaults": {
+      "countAdjust": 1,
+      "countExponent": 1,
+      "popAdjust": 1,
+      "popExp": 1,
+      "popularityAggregate": null,
+      "usePopularity": false
+    },
+    "schema": {
+      "description": "Finds entities related to the ones in the input, adding them one-by-one from each input.",
+      "properties": {
+        "aggregate": {
+          "$ref": "#/definitions/AGGREGATE_COOCCURRENCES",
+          "description": "The aggregate containing the CoOccurence entities corresponding to the id's in the input."
+        },
+        "countAdjust": {
+          "description": "Count is calculated as (count + countAdjust)^countExp",
+          "type": "number"
+        },
+        "countExponent": {
+          "description": "Count is calculated as (count + countAdjust)^countExponent, Use large number to decrese the significance of count.",
+          "type": "number"
+        },
+        "popAdjust": {
+          "description": "Popularity is calculated as (pop+popAdjust)^popExp, Use large popAdjust to decrease the significance of popularity.",
+          "type": "number"
+        },
+        "popExp": {
+          "description": "Popularity is calculated as (pop+popAdjust)^popExp",
+          "type": "number"
+        },
+        "popularityAggregate": {
+          "description": "Optionally fetch popularity from the entities of this aggregate instead of the 'aggregate'.",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/AGGREGATE"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "usePopularity": {
+          "description": "Use popularity as the rankning nominator, if not, use count.",
+          "type": "boolean"
+        }
+      }
+    },
+    "type": "filter"
+  },
+  "com/sannsyn/aggregator/computation/ensemble/impl/transforms/ScoreByCosineSimilarity": {
+    "defaults": {
+      "fixedVector": {
+        "aggregate": null,
+        "clusterIdSource": "cosSimClusterId",
+        "set": null,
+        "source": "CONFIG"
+      },
+      "sourceVector": {
+        "aggregate": null,
+        "sourceIdTranslate": "IDENTITY"
+      },
+      "transform": {
+        "constantAdjust": 0,
+        "weightAdjust": 1
+      }
+    },
+    "schema": {
+      "description": "Scores the sourceItem by the Cosine similarity between their count-vectors.  One vector is fixed over the source, the other is calculated for each id in the source.",
+      "properties": {
+        "fixedVector": {
+          "description": "The fixedVector is either fetched from config, externalIds or a relational aggregate.",
+          "properties": {
+            "aggregate": {
+              "$ref": "#/definitions/AGGREGATE_COOCCURENCE",
+              "description": "If the source is RELATIONAL_AGGREGAT, this is the aggregate where we can find the fixedVector"
+            },
+            "clusterId": {
+              "description": "The id in the above aggregate where we can find the cluster representing the fixedVector, if null, the externalId will be used",
+              "type": "string"
+            },
+            "clusterIdSource": {
+              "description": "If the source is a COOCCURENCE_AGGREGATE, this is the name of the config-element that contains the clusterId in that aggregate",
+              "type": "string"
+            },
+            "source": {
+              "description": "From where should we obtain the fixed vector",
+              "enum": [
+                "CONFIG",
+                "EXTERNAL_IDS",
+                "COOCCURENCE_AGGREGATE"
+              ],
+              "type": "string"
+            },
+            "vector": {
+              "description": "If the source is CONFIG, this is where we expect the vector to be",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            }
+          }
+        },
+        "sourceVector": {
+          "description": "The sourceVector is calculated for each id in the source.  This set is fetched from a cooccurence aggregate.  The sourceIds may first be translated throug a relationalAggregate.",
+          "properties": {
+            "aggregate": {
+              "$ref": "#/definitions/AGGREGATE_COOCCURENCE",
+              "description": "The aggregate where we can find the sourceSet"
+            },
+            "sourceIdTranslate": {
+              "description": "Should the ids in the aggregate above be translated through a relational aggregate?",
+              "enum": [
+                "IDENTITY",
+                "RELATIONAL_AGGREGATE"
+              ],
+              "type": "string"
+            },
+            "translateSourceIdAggregate": {
+              "$ref": "#/definitions/AGGREGATE_RELATIONAL",
+              "description": "If ids should be translated through a relational aggregate, this is where they are looked up."
+            }
+          }
+        },
+        "transform": {
+          "constantAdjust": {
+            "description": "As in the constantAdjust above",
+            "type": "float"
+          },
+          "description": "How we apply the cosine-equality meassure to the existing score. It is simply applied as score = score * (weightAdjust * (constantAdjust + cosinedist))",
+          "weightAdjust": {
+            "description": "As in the weightAdjust above",
+            "type": "float"
+          }
+        }
+      }
+    },
+    "type": "transform"
+  },
+  "com/sannsyn/aggregator/computation/ensemble/impl/transforms/ScoreBySetEquality": {
+    "defaults": {
+      "equalitytransform": {
+        "countAdjust": 0,
+        "weightAdjust": 1
+      },
+      "fixedSet": {
+        "aggregate": null,
+        "clusterIdSource": null,
+        "set": null,
+        "source": "CONFIG"
+      },
+      "sourceSet": {
+        "aggregate": null,
+        "sourceIdTranslate": "IDENTITY"
+      }
+    },
+    "schema": {
+      "description": "Scores the sourceItem by the Jaccard metric on a pair of sets.  One set is fixed over the source, the other is calculated for each id in the source.",
+      "properties": {
+        "equalitytransform": {
+          "countAdjust": {
+            "description": "As in the countAdjust above",
+            "type": "float"
+          },
+          "description": "How we apply the set-equality meassure to the existing score. It is simply applied as weightAdjust * ((countAdjust + cut) / (countAdjust + fixeSetSize + sourceSetSize - cut))",
+          "weightAdjust": {
+            "description": "As in the weightAdjust above",
+            "type": "float"
+          }
+        },
+        "fixedSet": {
+          "description": "The fixedSet is either fetched from config, externalIds or a relational aggregate.",
+          "properties": {
+            "aggregate": {
+              "$ref": "#/definitions/AGGREGATE_RELATIONAL",
+              "description": "If the source i RELATIONAL_AGGREGAT, this is the aggregate where we can find the fixedSet"
+            },
+            "clusterId": {
+              "description": "The id in the above aggregate where we can find the cluster representing the fixedSet, if null, the externalId will be used",
+              "type": "string"
+            },
+            "clusterIdSource": {
+              "description": "If the source is a RELATIONAL_AGGREGATE, this is the name of the config-element that contains the clusterId in that aggregate",
+              "type": "string"
+            },
+            "set": {
+              "description": "If the source is CONFIG, this is where we expect the set to be",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "source": {
+              "description": "From where should we obtain the fixed set",
+              "enum": [
+                "CONFIG",
+                "EXTERNAL_IDS",
+                "RELATIONAL_AGGREGATE"
+              ],
+              "type": "string"
+            }
+          }
+        },
+        "sourceSet": {
+          "description": "The sourceSet is calculated for each id in the source.  This set is fetched from a relational aggregate.  The sourceIds may first be translated throug a relationalAggregate.",
+          "properties": {
+            "aggregate": {
+              "$ref": "#/definitions/AGGREGATE_RELATIONAL",
+              "description": "The aggregate where we can find the sourceSet"
+            },
+            "sourceIdTranslate": {
+              "description": "Should the ids in the aggregate above be translated through a relational aggregate?",
+              "enum": [
+                "IDENTITY",
+                "RELATIONAL_AGGREGATE"
+              ],
+              "type": "string"
+            },
+            "translateSourceIdAggregate": {
+              "$ref": "#/definitions/AGGREGATE_RELATIONAL",
+              "description": "If ids should be translated through a relational aggregate, this is where they are looked up."
+            }
+          }
+        }
+      }
+    },
+    "type": "transform"
+  },
+  "com/sannsyn/aggregator/computation/ensemble/impl/transforms/ScoreEntitiesForCluster": {
+    "defaults": {
+      "adjustmentNormalization": {
+        "from": 0,
+        "method": "NONE",
+        "to": 1,
+        "width": 1
+      },
+      "censorOwnEntities": true,
+      "countAdjust": 1,
+      "countExp": 1,
+      "scoreType": "SCORE",
+      "weightType": "CONSTANT"
+    },
+    "schema": {
+      "description": "Scores the entities in the source by the relation to the cluster in the given aggregate with the given externalId by their precence in the expanded cloud.",
+      "properties": {
+        "adjustmentNormalization": {
+          "description": "After the adjustments have been aggregated we normalize them to a specific shape.",
+          "properties": {
+            "from": {
+              "description": "Lower bound of adjustment.",
+              "type": "float"
+            },
+            "method": {
+              "description": "Shape of adjusted values. Use NONE to not apply normalization",
+              "enum": [
+                "NONE",
+                "LINEAR",
+                "SIGMOID"
+              ],
+              "type": "string"
+            },
+            "to": {
+              "description": "Upper bound of adjustment.",
+              "type": "flaot"
+            }
+          },
+          "type": "object"
+        },
+        "aggregate": {
+          "$ref": "#/definitions/AGGREGATE_COOCCURRENCES",
+          "description": "The aggregate containing the data."
+        },
+        "censorOwnEntities": {
+          "description": "Should we omit entities already present in the cluster",
+          "type": "boolean"
+        },
+        "countAdjust": {
+          "description": "If weightMethod is RELATIVECOUNTADJUSTED, this will be used in weight = siblingcount/(countAdjust + otherCount)^countExp",
+          "type": "number"
+        },
+        "countExp": {
+          "description": "If weightMethod is RELATIVECOUNTADJUSTED, this will be used in weight = siblingcount/(countAdjust + otherCount)^countExp",
+          "type": "number"
+        },
+        "scoreType": {
+          "description": "Where ADJUST_ADD adds result to existing score, ADJUST_MULTIPLY multiplies existing, and SCORE sets the score.",
+          "enum": [
+            "ADJUST_ADD",
+            "ADJUST_MULTIPLY",
+            "SCORE"
+          ],
+          "type": "string"
+        },
+        "weightType": {
+          "enum": [
+            "CONSTANT",
+            "COUNT",
+            "RELATIVECOUNT",
+            "RELATIVECOUNTADJUSTED",
+            "LOGCOUNT"
+          ],
+          "type": "string"
+        }
+      }
+    },
+    "type": "transform"
+  },
+  "com/sannsyn/aggregator/computation/ensemble/impl/transforms/ScoreEntitiesForEntity": {
+    "defaults": {
+      "censorOwnEntities": true,
+      "countAdjust": 1,
+      "countExp": 1,
+      "weightType": "CONSTANT"
+    },
+    "schema": {
+      "description": "Scores the entities in the source by the relation to the entity in the given aggregate with the given externalId",
+      "properties": {
+        "aggregate": {
+          "$ref": "#/definitions/AGGREGATE_COOCCURRENCES",
+          "description": "The aggregate containing the data."
+        },
+        "censorOwnEntities": {
+          "description": "Should we omit entities already present in the cluster",
+          "type": "boolean"
+        },
+        "countAdjust": {
+          "description": "If weightMethod is RELATIVECOUNTADJUSTED, this will be used in weight = siblingcount/(countAdjust + otherCount)^countExp",
+          "type": "number"
+        },
+        "countExp": {
+          "description": "If weightMethod is RELATIVECOUNTADJUSTED, this will be used in weight = siblingcount/(countAdjust + otherCount)^countExp",
+          "type": "number"
+        },
+        "weightType": {
+          "enum": [
+            "CONSTANT",
+            "COUNT",
+            "RELATIVECOUNT",
+            "RELATIVECOUNTADJUSTED",
+            "LOGCOUNT"
+          ],
+          "type": "string"
+        }
+      }
+    },
+    "type": "transform"
+  },
+  "com/sannsyn/aggregator/computation/ensemble/impl/transforms/SelectExternalIds": {
+    "defaults": {
+      "from": 0,
+      "index": null,
+      "to": null
+    },
+    "schema": {
+      "description": "Overrides the runtimeparameters with a selection of the externalIds before calling the next element in the chain.",
+      "properties": {
+        "from": {
+          "description": "Selects id's from this index and until 'to' or the end of the list.  Eg. from 1 will simply delete the first index.",
+          "type": "integer"
+        },
+        "index": {
+          "description": "Select this id, replaces all externalIds with a single one found at this index",
+          "oneOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "to": {
+          "description": "Selects indexes up to this point, only meaningfull with the from-parameter",
+          "oneOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "type": "transform"
+  },
+  "com/sannsyn/aggregator/computation/ensemble/impl/transforms/SelectExternalIdsAsCategoryFromAggregate": {
+    "defaults": {
+      "categorySelection": "ALL",
+      "threshold": null
+    },
+    "schema": {
+      "description": "Overrides the runtimeparameters by replacing the external-ids with some values found in a relational aggregate. The resulting externalIds can be either all of the categories, the smallest one or the largest one(as found by the size in the reverse aggregate)",
+      "properties": {
+        "categoryAggregate": {
+          "$ref": "#/definitions/AGGREGATE_RELATIONAL",
+          "description": "Where we look up the incoming externalIds to find categories"
+        },
+        "categorySelection": {
+          "description": "What category should we pass on as externalId, all of them, the one with smallest size in the reverse aggregate, or the one with the largest size?",
+          "enum": [
+            "ALL",
+            "LARGEST",
+            "SMALLEST"
+          ],
+          "type": "string"
+        },
+        "inverseCategoryAggregate": {
+          "$ref": "#/definitions/AGGREGATE_RELATIONAL",
+          "description": "Only necessary if we do not use categoryselection ALL. Used to look up the size of the categories"
+        },
+        "threshold": {
+          "description": "Depending on categorySelection.  If categorySelection is SMALLEST, the threshold ensures that the selected category is larger than threshold.  If categorySelection is LARGEST, it ensures the size is less than threshold.",
+          "oneOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "type": "transform"
+  },
+  "com/sannsyn/aggregator/computation/ensemble/impl/transforms/Shuffle": {
+    "defaults": {},
+    "schema": {
+      "description": "Shuffles the input"
+    },
+    "type": "transform"
+  },
+  "com/sannsyn/aggregator/computation/ensemble/impl/transforms/Sort": {
+    "defaults": {
+      "ascending": true
+    },
+    "schema": {
+      "description": "Sorts the input",
+      "properties": {
+        "ascending": {
+          "type": "boolean"
+        }
+      }
+    },
+    "type": "transform"
+  },
+  "com/sannsyn/aggregator/computation/ensemble/impl/transforms/WeightByClusterMetric": {
+    "defaults": {
+      "apply": "SET",
+      "binary": {
+        "cutoff": 1
+      },
+      "constant": 1,
+      "exponent": {
+        "constant": 1,
+        "exponent": 0.5
+      },
+      "function": "CONSTANT",
+      "linear": {
+        "offset": 0,
+        "range": 1
+      },
+      "metric": "COUNT",
+      "missing": {
+        "action": "CONSTANT",
+        "constant": 0
+      },
+      "sigmoid": {
+        "max": 1,
+        "min": 0,
+        "width": 1
+      },
+      "translation": 0
+    },
+    "schema": {
+      "description": "Applies a function, based on a cluster identified by the input-ids, to the input-weights uisng the selected metric from the cluster as input. The function may be applied in different ways(set, add, multiply, divide). Also an action may be applied when the metric is missing.",
+      "properties": {
+        "apply": {
+          "description": "How should the weight be applied",
+          "enum": [
+            "SET",
+            "MULTIPLY",
+            "ADD",
+            "DIVIDE"
+          ],
+          "type": "string"
+        },
+        "binary": {
+          "cutoff": {
+            "description": "Threshold for the binary function.  Values greater than this returns 1, otherwise 0.",
+            "type": "number"
+          }
+        },
+        "constant": {
+          "description": "The value of the constant function(if used)",
+          "type": "number"
+        },
+        "exponent": {
+          "description": "When function is EXPONENT, the adjustment is calculated as contant + value^exponent",
+          "properties": {
+            "constant": {
+              "description": "The constant in in constant + value^exponent",
+              "type": "number"
+            },
+            "exponent": {
+              "description": "The exponent in in constant + value^exponent",
+              "type": "number"
+            }
+          },
+          "type": "object"
+        },
+        "function": {
+          "description": "The type of weighting function",
+          "enum": [
+            "CONSTANT",
+            "IDENTITY",
+            "TRANSLATE",
+            "SIGMOID",
+            "LINEAR",
+            "BINARY",
+            "EXPONENT"
+          ],
+          "type": "string"
+        },
+        "linear": {
+          "properties": {
+            "offset": {
+              "description": "The offset of the linear function, val = offset + range*(x/(max-min))",
+              "type": "number"
+            },
+            "range": {
+              "description": "The max of the linear function, val = offset + range*(x/(max-min))",
+              "type": "number"
+            }
+          },
+          "type": "object"
+        },
+        "metric": {
+          "description": "What value in the cluster should be weighted.",
+          "enum": [
+            "POPULARITY",
+            "COUNT",
+            "SIZE"
+          ],
+          "type": "string"
+        },
+        "missing": {
+          "description": "How should we handle weights of unknown clusters?",
+          "properties": {
+            "action": {
+              "enum": [
+                "CONSTANT",
+                "LEAVE"
+              ],
+              "type": "string"
+            },
+            "constant": {
+              "description": "If missing.action is CONSTANT, use this value for missing weights.",
+              "type": "number"
+            }
+          },
+          "type": "object"
+        },
+        "relationalAggregate": {
+          "$ref": "#/definitions/AGGREGATE_RELATIONAL",
+          "description": "The aggregate containing the data."
+        },
+        "sigmoid": {
+          "properties": {
+            "max": {
+              "description": "The 95% percentile of the sigmoid function",
+              "type": "number"
+            },
+            "min": {
+              "description": "The 5% percentile of the sigmoid function",
+              "type": "number"
+            },
+            "width": {
+              "description": "The steepness of the sigmoid function",
+              "type": "number"
+            }
+          },
+          "type": "object"
+        },
+        "translation": {
+          "description": "When the function is 'translation' this will be added to the weight.",
+          "type": "number"
+        }
+      }
+    },
+    "type": "transform"
+  },
+  "com/sannsyn/test/aggregator/remoting/akkaserver/util/ensemble/AssertAggregatesExistAndAreNotEmpty": {
+    "defaults": {
+      "parameters": {
+        "aggregates": []
+      }
+    },
+    "schema": {
+      "description": "Used for testing only",
+      "properties": {
+        "parameters": {
+          "properties": {
+            "aggregates": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            }
+          },
+          "type": "object"
+        }
+      }
+    },
+    "type": "producer"
+  },
+  "com/sannsyn/test/aggregator/remoting/akkaserver/util/ensemble/EchoExternalIds": {
+    "defaults": {},
+    "schema": {
+      "description": "Used for testing only"
+    },
+    "type": "producer"
+  },
+  "com/sannsyn/test/aggregator/remoting/akkaserver/util/ensemble/EchoParameters": {
+    "defaults": {
+      "parameterName": "parameters",
+      "parameters": {},
+      "score": "COUNT"
+    },
+    "schema": {
+      "description": "Used for testing only",
+      "properties": {
+        "parameterName": {
+          "description": "What parameters should we echo?  This must be some kind of list.",
+          "type": "string"
+        },
+        "score": {
+          "enum": [
+            "CONSTANT",
+            "COUNT",
+            "RANDOM"
+          ],
+          "type": "string"
+        }
+      }
+    },
+    "type": "producer"
+  },
+  "faucets": {
+    "com/sannsyn/aggregator/computation/ensemble/impl/faucets/DebugFaucet": {
+      "defaults": {
+        "maxN": 100000,
+        "minN": -1,
+        "n": 10
+      },
+      "schema": {
+        "description": "Produces a list of [id, score]'s representing the scored result of the chain and some additional debuginfo.",
+        "properties": {
+          "maxN": {
+            "type": "integer"
+          },
+          "minN": {
+            "type": "integer"
+          }
+        }
+      }
+    },
+    "com/sannsyn/aggregator/computation/ensemble/impl/faucets/SourceFaucet": {
+      "defaults": {
+        "maxN": 100000,
+        "minN": -1,
+        "n": 10
+      },
+      "schema": {
+        "description": "Produces an ordered list of [id, score]'s representing the scored result of the chain.",
+        "properties": {
+          "maxN": {
+            "type": "integer"
+          },
+          "minN": {
+            "type": "integer"
+          }
+        }
+      }
+    },
+    "com/sannsyn/aggregator/computation/ensemble/impl/faucets/StandardFaucet": {
+      "defaults": {
+        "maxN": 100000,
+        "minN": -1,
+        "n": 10
+      },
+      "schema": {
+        "description": "Produces an ordered list of id's representing the result of the chain.",
+        "properties": {
+          "maxN": {
+            "type": "integer"
+          },
+          "minN": {
+            "type": "integer"
+          }
+        }
+      }
+    }
+  }
+}

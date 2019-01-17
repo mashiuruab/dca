@@ -1,0 +1,37 @@
+[
+    {
+        "rank": 1,
+        "id": 120,
+        "src": "http://placehold.it/150x220",
+        "title": "First book",
+        "score": 190
+    },
+    {
+        "rank": 2,
+        "id": 121,
+        "src": "http://placehold.it/150x220",
+        "title": "Second book",
+        "score": 185
+    },
+    {
+        "rank": 3,
+        "id": 122,
+        "src": "http://placehold.it/150x220",
+        "title": "Third book",
+        "score": 170
+    },
+    {
+        "rank": 4,
+        "id": 123,
+        "src": "http://placehold.it/150x220",
+        "title": "Fourth book",
+        "score": 150
+    },
+    {
+        "rank": 5,
+        "id": 124,
+        "src": "http://placehold.it/150x220",
+        "title": "Fifth book",
+        "score": 100
+    }
+]

@@ -1,0 +1,15 @@
+[
+  [
+    "lookup",
+    {
+      "taxon": "product",
+      "id": "50255976_BASE",
+      "account": "felk",
+      "pointers": [
+        "/id",
+        "/name",
+        "/image"
+      ]
+    }
+  ]
+]

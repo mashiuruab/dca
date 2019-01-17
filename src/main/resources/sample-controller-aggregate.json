@@ -1,0 +1,1244 @@
+{
+    "service": {
+        "accountId": "DummyAccountId",
+        "aggregateDefaults": {
+            "popularity": {
+                "long": {
+                    "halftime": "100d",
+                    "weight": 1
+                },
+                "maxCacheAge": "1h",
+                "short": {
+                    "halftime": "10d",
+                    "weight": 5
+                }
+            }
+        },
+        "aggregates": {
+            "AppExposureDownloaded": {
+                "description": "Recommendations exposed to the customer by push-messages in the app.  This aggregate records messages that are pushed, opened and downloaded",
+                "tags": [
+                    "EXPOSE:downloaded"
+                ],
+                "type": "CLUSTER_COUNT"
+            },
+            "AppExposureRead": {
+                "description": "Recommendations exposed to the customer by push-messages in the app.  This aggregate records messages that are pushed and opened",
+                "tags": [
+                    "EXPOSE:read"
+                ],
+                "type": "CLUSTER_COUNT"
+            },
+            "AppExposureSent": {
+                "description": "Recommendations exposed to the customer by push-messages in the app.  This aggregate records messages that are pushed to the customers phone",
+                "tags": [
+                    "EXPOSE:sent"
+                ],
+                "type": "CLUSTER_COUNT"
+            },
+            "AppRecommended": {
+                "description": "Recommendations exposed to the customer in the App",
+                "tags": [
+                    "EXPOSE:recommended"
+                ],
+                "type": "CLUSTER_COUNT"
+            },
+            "CustomerAudioBook": {
+                "description": "Audiobooks bought by users",
+                "tags": [
+                    "audio"
+                ],
+                "type": "COOCCURRENCES"
+            },
+            "CustomerAuthor": {
+                "description": "Authors for customer",
+                "tags": [
+                    "customer_author"
+                ],
+                "type": "COOCCURRENCES"
+            },
+            "CustomerBook": {
+                "description": "Books bought by users",
+                "tags": [
+                    "books"
+                ],
+                "type": "COOCCURRENCES"
+            },
+            "CustomerChildren": {
+                "description": "Childrensbooks bought by users",
+                "tags": [
+                    "children"
+                ],
+                "type": "COOCCURRENCES"
+            },
+            "CustomerEBook": {
+                "description": "EBooks bought by users",
+                "tags": [
+                    "ebooks"
+                ],
+                "type": "COOCCURRENCES"
+            },
+            "CustomerItems": {
+                "description": "All items bought by users - used in default recommender",
+                "tags": [
+                    "items"
+                ],
+                "type": "COOCCURRENCES"
+            },
+            "CustomerLanguage": {
+                "description": "Languages for customer",
+                "tags": [
+                    "customer_language"
+                ],
+                "type": "CLUSTER"
+            },
+            "DeweyItem": {
+                "description": "Dewey-item mapping, only found for non fiction",
+                "tags": [
+                    "dewey"
+                ],
+                "type": "CLUSTER_INVERSE"
+            },
+            "ItemAuthor": {
+                "description": "item-language",
+                "tags": [
+                    "author"
+                ],
+                "type": "CLUSTER"
+            },
+            "ItemCustomer": {
+                "description": "Users who have bought items",
+                "tags": [
+                    "items"
+                ],
+                "type": "CLUSTER_INVERSE"
+            },
+            "ItemDewey": {
+                "description": "Item-dewey mapping, only found for non fiction",
+                "tags": [
+                    "dewey"
+                ],
+                "type": "CLUSTER"
+            },
+            "ItemLanguage": {
+                "description": "item-language",
+                "tags": [
+                    "language"
+                ],
+                "type": "CLUSTER"
+            },
+            "ItemName": {
+                "description": "Titles by isbn",
+                "tags": [
+                    "title"
+                ],
+                "type": "THESAURUS"
+            },
+            "ItemType": {
+                "description": "Realy an item-type, eg. Book, e-book, boardgame...",
+                "tags": [
+                    "itemtype"
+                ],
+                "type": "CLUSTER"
+            },
+            "SummaryArticleVectors": {
+                "description": "Term-clusters with article-entities",
+                "static": false,
+                "tags": [
+                    "summary"
+                ],
+                "type": "CLUSTER_INVERSE"
+            },
+            "SummaryTermVectors": {
+                "description": "Article-clusters with term-entities",
+                "static": true,
+                "tags": [
+                    "summary"
+                ],
+                "type": "CLUSTER"
+            },
+            "TypeCustomer": {
+                "description": "What customers have bought different types, eg. Book, e-book, boardgame...",
+                "tags": [
+                    "customertype"
+                ],
+                "type": "CLUSTER"
+            },
+            "WebRead": {
+                "clusterTaxon": null,
+                "description": "Items viewed on the ARK web site",
+                "entityTaxon": null,
+                "popularity": {
+                    "long": {
+                        "halftime": "31d",
+                        "weight": 1
+                    },
+                    "maxCacheAge": "30s",
+                    "short": {
+                        "halftime": "10m",
+                        "weight": 10
+                    }
+                },
+                "static": false,
+                "supertype": "CLUSTER",
+                "tags": [
+                    "webread"
+                ],
+                "type": "COOCCURRENCES",
+                "updateFilterName": ""
+            }
+        },
+        "akka": {
+            "cache_enabled": true,
+            "updateactor": {
+                "disableUpdateConfirmation": false
+            }
+        },
+        "batch": {
+            "cleanupPeriod": "1h",
+            "expirytime": "1d"
+        },
+        "colt": {
+            "initialArraySize": 5
+        },
+        "computation": {
+            "computationalWorkPoolSize": 20,
+            "concurrentComputationsQueueSize": 50,
+            "nofConcurrentComputations": 10
+        },
+        "computationTasks": {},
+        "configname": "ark",
+        "description": "Ark, customer-book and supporting aggregates",
+        "ensembles": {
+            "defaultRecommenderName": "NoSuchRecommender",
+            "elements": {
+                "faucets": {
+                    "debug": {
+                        "class": "com.sannsyn.aggregator.computation.ensemble.impl.faucets.SourceFaucet"
+                    },
+                    "scored": {
+                        "class": "com.sannsyn.aggregator.computation.ensemble.impl.faucets.SourceFaucet"
+                    },
+                    "standard": {
+                        "class": "com.sannsyn.aggregator.computation.ensemble.impl.faucets.StandardFaucet"
+                    }
+                },
+                "sources": {
+                    "BayesAudioBookRecommender": {
+                        "aggregate": "CustomerItems",
+                        "class": "com.sannsyn.aggregator.computation.ensemble.impl.producers.general.BayesRecommender",
+                        "retainAggregate": "CustomerAudioBook"
+                    },
+                    "BayesEBookRecommender": {
+                        "aggregate": "CustomerItems",
+                        "class": "com.sannsyn.aggregator.computation.ensemble.impl.producers.general.BayesRecommender",
+                        "retainAggregate": "CustomerEBook"
+                    },
+                    "BayesItemRecommender": {
+                        "aggregate": "CustomerItems",
+                        "class": "com.sannsyn.aggregator.computation.ensemble.impl.producers.general.BayesRecommender"
+                    },
+                    "CencorISBN": {
+                        "class": "com.sannsyn.aggregator.computation.ensemble.impl.filters.FilterOnUpdateListener",
+                        "filterUpdateListener": "CencorISBN",
+                        "mode": "CENCOR"
+                    },
+                    "CoOccurenceItemItem": {
+                        "aggregate": "CustomerItems",
+                        "class": "com.sannsyn.aggregator.computation.ensemble.impl.producers.general.EntityEntityCoOccurrenceRecommender",
+                        "debug": true
+                    },
+                    "ExternalIdsToInput": {
+                        "class": "com.sannsyn.aggregator.computation.ensemble.impl.producers.general.ExternalIdsToInput"
+                    },
+                    "FilterCustomersWithBooks": {
+                        "cencorIds": [],
+                        "class": "com.sannsyn.aggregator.computation.ensemble.impl.filters.RetainClustersByEntityDistanceToInput",
+                        "clusterAggregate": "CustomerItems",
+                        "entityAggregate": "SummaryTermVectors",
+                        "inputSource": "CENSOR_IDS",
+                        "maximumDistance": null,
+                        "minimumDistance": 0.1,
+                        "submode": "ALL",
+                        "supermode": "ALL"
+                    },
+                    "FindByDewey": {
+                        "categoryEntityAggregate": "DeweyItem",
+                        "class": "com.sannsyn.aggregator.computation.ensemble.impl.producers.general.EqualCategorySelector",
+                        "entityCategoryAggregate": "ItemDewey"
+                    },
+                    "ItemSiblingsForCluster": {
+                        "aggregate": "CustomerItems",
+                        "class": "com.sannsyn.aggregator.computation.ensemble.impl.producers.general.EntitySiblingsForCluster"
+                    },
+                    "ItemsCloudCustomers": {
+                        "class": "com.sannsyn.aggregator.computation.ensemble.impl.filters.ClusterCloudToEntities",
+                        "clusterAggregate": "ItemCustomer"
+                    },
+                    "LLRSiblings": {
+                        "aggregate": "CustomerItems",
+                        "class": "com.sannsyn.aggregator.computation.ensemble.impl.producers.general.LogLikelihoodSiblingRecommender"
+                    },
+                    "MostPopularAudioBooks": {
+                        "aggregate": "CustomerAudioBook",
+                        "class": "com.sannsyn.aggregator.computation.ensemble.impl.producers.general.MostPopularEntities"
+                    },
+                    "MostPopularBooks": {
+                        "aggregate": "CustomerBook",
+                        "class": "com.sannsyn.aggregator.computation.ensemble.impl.producers.general.MostPopularEntities"
+                    },
+                    "MostPopularEBooks": {
+                        "aggregate": "CustomerEBook",
+                        "class": "com.sannsyn.aggregator.computation.ensemble.impl.producers.general.MostPopularEntities"
+                    },
+                    "MostPopularItems": {
+                        "aggregate": "CustomerItems",
+                        "class": "com.sannsyn.aggregator.computation.ensemble.impl.producers.general.MostPopularEntities"
+                    },
+                    "RelatedDocuments": {
+                        "bm25": {},
+                        "class": "com.sannsyn.aggregator.computation.ensemble.impl.producers.bm25.RelatedDocumentsBm25",
+                        "documentVector": "SummaryArticleVectors",
+                        "keywordextractor": {},
+                        "meta": false,
+                        "metakeywordextractor": {},
+                        "n": 100,
+                        "termVector": "SummaryTermVectors"
+                    },
+                    "RoundRobinAudioBook": {
+                        "aggregate": "CustomerAudioBook",
+                        "class": "com.sannsyn.aggregator.computation.ensemble.impl.producers.general.RoundRobinClusterEntity"
+                    },
+                    "RoundRobinCustomerItemsOnInput": {
+                        "aggregate": "CustomerItems",
+                        "class": "com.sannsyn.aggregator.computation.ensemble.impl.transforms.RoundRobinEntities",
+                        "countAdjust": 20,
+                        "countExponent": 0.5,
+                        "debug": true,
+                        "usePopularity": true
+                    },
+                    "RoundRobinEBook": {
+                        "aggregate": "CustomerEBook",
+                        "class": "com.sannsyn.aggregator.computation.ensemble.impl.producers.general.RoundRobinClusterEntity",
+                        "countAdjust": 250,
+                        "countExponent": 0.5,
+                        "usePopularity": false
+                    },
+                    "RoundRobinExposedItems": {
+                        "aggregate": "AppExposureRead",
+                        "class": "com.sannsyn.aggregator.computation.ensemble.impl.producers.general.RoundRobinClusterEntity",
+                        "countAdjust": 20,
+                        "countExponent": 0.5,
+                        "usePopularity": true
+                    },
+                    "RoundRobinItems": {
+                        "aggregate": "CustomerItems",
+                        "class": "com.sannsyn.aggregator.computation.ensemble.impl.producers.general.RoundRobinClusterEntity",
+                        "countAdjust": 20,
+                        "countExponent": 0.5,
+                        "usePopularity": false
+                    },
+                    "RoundRobinReadItems": {
+                        "aggregate": "WebRead",
+                        "class": "com.sannsyn.aggregator.computation.ensemble.impl.producers.general.RoundRobinClusterEntity",
+                        "countAdjust": 20,
+                        "countExponent": 0.5,
+                        "usePopularity": true
+                    },
+                    "SemanticCloudEntityCluster": {
+                        "class": "com.sannsyn.aggregator.computation.ensemble.impl.producers.semantic.SemanticCloudEntityClusterRecommender",
+                        "clusterEntityAggregate": "CustomerItems",
+                        "clusterEntityAggregateInverse": "ItemCustomer",
+                        "debug": false,
+                        "relatedDocuments": {
+                            "debug": false,
+                            "documentVector": "SummaryArticleVectors",
+                            "meta": false,
+                            "termVector": "SummaryTermVectors"
+                        }
+                    },
+                    "SemanticCloudEntityClusterRecommender": {
+                        "class": "com.sannsyn.aggregator.computation.ensemble.impl.producers.semantic.SemanticCloudEntityClusterRecommender",
+                        "clusterEntityAggregate": "CustomerItems",
+                        "clusterEntityAggregateInverse": "ItemCustomer",
+                        "relatedDocuments": {
+                            "debug": true,
+                            "documentVector": "SummaryArticleVectors",
+                            "meta": false,
+                            "termVector": "SummaryTermVectors"
+                        }
+                    },
+                    "SemanticallySimilarItemsBm25": {
+                        "class": "com.sannsyn.aggregator.computation.ensemble.impl.producers.bm25.RelatedDocumentsBm25",
+                        "debug": true,
+                        "documentVector": "SummaryArticleVectors",
+                        "meta": false,
+                        "termVector": "SummaryTermVectors"
+                    },
+                    "emptyProducer": {
+                        "class": "com.sannsyn.aggregator.computation.ensemble.impl.producers.general.EmptyProducer"
+                    },
+                    "exposureAdjust": {
+                        "class": "com.sannsyn.aggregator.computation.ensemble.impl.transforms.ExposureAdjust",
+                        "countAdjust": 1,
+                        "expAdjust": 1.5,
+                        "exposureAggregate": "AppExposureRead",
+                        "type": "transform"
+                    },
+                    "frequencyExponentialAdjust": {
+                        "aggregate": "CustomerItems",
+                        "class": "com.sannsyn.aggregator.computation.ensemble.impl.transforms.FrequencyExponentialAdjust",
+                        "countAdjust": 5,
+                        "freqExponent": 0.75
+                    },
+                    "noSuchRecommender": {
+                        "class": "com.sannsyn.aggregator.computation.ensemble.impl.producers.general.ConstantStringProducer",
+                        "text": "Unknown recommender"
+                    },
+                    "pipes": {
+                        "FindSemanticCloud": {
+                            "class": "com.sannsyn.aggregator.computation.ensemble.impl.pipes.ForEachPipe",
+                            "subchain": [
+                                "RelatedDocuments"
+                            ]
+                        },
+                        "MultiIdPipe": {
+                            "cencorFromCluster": {
+                                "enabled": false
+                            },
+                            "cencorInputIds": false,
+                            "class": "com.sannsyn.aggregator.computation.ensemble.impl.pipes.MultiIdPipe",
+                            "selection": [
+                                1
+                            ],
+                            "unique": false
+                        },
+                        "aggregate": {
+                            "class": "com.sannsyn.aggregator.computation.ensemble.impl.pipes.AggregatePipe"
+                        },
+                        "fallback": {
+                            "class": "com.sannsyn.aggregator.computation.ensemble.impl.pipes.FallbackPipe"
+                        },
+                        "merge": {
+                            "class": "com.sannsyn.aggregator.computation.ensemble.impl.pipes.PipeMerge"
+                        }
+                    },
+                    "popularityAdjust": {
+                        "aggregate": "CustomerItems",
+                        "class": "com.sannsyn.aggregator.computation.ensemble.impl.transforms.PopularityAdjust",
+                        "into": {
+                            "max": 10,
+                            "min": 1,
+                            "width": 3
+                        },
+                        "isEntity": true
+                    },
+                    "retainAllBooks": {
+                        "aggregate": "ItemType",
+                        "class": "com.sannsyn.aggregator.computation.ensemble.impl.filters.RetainWithProperty",
+                        "mode": "ATLEAST_ONE",
+                        "properties": [
+                            "books",
+                            "ebooks",
+                            "audio "
+                        ]
+                    },
+                    "retainBooks": {
+                        "aggregate": "ItemType",
+                        "class": "com.sannsyn.aggregator.computation.ensemble.impl.filters.RetainWithProperty",
+                        "mode": "ATLEAST_ONE",
+                        "properties": [
+                            "books",
+                            "ebooks",
+                            "audio "
+                        ]
+                    },
+                    "retainEBooks": {
+                        "aggregate": "CustomerEBook",
+                        "class": "com.sannsyn.aggregator.computation.ensemble.impl.filters.RetainAggregate"
+                    },
+                    "retainHead": {
+                        "class": "com.sannsyn.aggregator.computation.ensemble.impl.filters.RetainHead",
+                        "debug": true,
+                        "fallbackN": 20,
+                        "method": "N_FACTOR",
+                        "nFactor": 2
+                    },
+                    "retainMatching": {
+                        "class": "com.sannsyn.aggregator.computation.ensemble.impl.filters.RetainClustersMatchingTarget",
+                        "featureaggregate": "ItemType"
+                    },
+                    "rndScore": {
+                        "class": "com.sannsyn.aggregator.computation.ensemble.impl.transforms.RndScore"
+                    },
+                    "selectTail": {
+                        "class": "com.sannsyn.aggregator.computation.ensemble.impl.transforms.SelectExternalIds",
+                        "from": 1
+                    },
+                    "shuffle": {
+                        "class": "com.sannsyn.aggregator.computation.ensemble.impl.transforms.Shuffle"
+                    },
+                    "sort": {
+                        "class": "com.sannsyn.aggregator.computation.ensemble.impl.transforms.Sort"
+                    },
+                    "sortAscending": {
+                        "class": "com.sannsyn.aggregator.computation.ensemble.impl.transforms.Sort"
+                    },
+                    "sortDescending": {
+                        "ascending": false,
+                        "class": "com.sannsyn.aggregator.computation.ensemble.impl.transforms.Sort"
+                    }
+                }
+            },
+            "log": {
+                "logtype": "NULL"
+            },
+            "queueSize": 50,
+            "tasks": {
+                "ArkCustomerAudioBook": {
+                    "chain": [
+                        "sortDescending",
+                        "exposureAdjust",
+                        {
+                                "fallback": [
+                                "RoundRobinAudioBook",
+                                "BayesAudioBookRecommender",
+                                "MostPopularAudioBooks"
+                            ]
+                        }
+                    ],
+                    "out": "standard"
+                },
+                "ArkCustomerBayesBook": {
+                    "chain": [
+                        {
+                            "fallback": [
+                                [
+                                    "retainBooks",
+                                    "sortDescending",
+                                    "BayesItemRecommender"
+                                ],
+                                "MostPopularItems"
+                            ]
+                        }
+                    ],
+                    "out": "standard"
+                },
+                "ArkCustomerBook": {
+                    "chain": [
+                        {
+                            "fallback": [
+                                [
+                                    "shuffle",
+                                    "retainHead",
+                                    "CencorISBN",
+                                    "sortDescending",
+                                    "exposureAdjust",
+                                    "retainAllBooks",
+                                    "RoundRobinItems"
+                                ],
+                                [
+                                    "shuffle",
+                                    "retainHead",
+                                    "CencorISBN",
+                                    "sortDescending",
+                                    "exposureAdjust",
+                                    "retainAllBooks",
+                                    "MostPopularItems"
+                                ]
+                            ]
+                        }
+                    ],
+                    "out": "standard"
+                },
+                "ArkCustomerBookCencored": {
+                    "chain": [
+                        "CencorISBN",
+                        "sortDescending",
+                        "exposureAdjust",
+                        {
+                            "fallback": [
+                                [
+                                    "RoundRobinItems"
+                                ],
+                                "MostPopularItems"
+                            ]
+                        }
+                    ],
+                    "out": "standard"
+                },
+                "ArkCustomerBookCencored2": {
+                    "chain": [
+                        {
+                            "fallback": [
+                                [
+                                    "shuffle",
+                                    "retainHead",
+                                    "CencorISBN",
+                                    "sortDescending",
+                                    "exposureAdjust",
+                                    "retainAllBooks",
+                                    "RoundRobinItems"
+                                ],
+                                [
+                                    "shuffle",
+                                    "retainHead",
+                                    "CencorISBN",
+                                    "sortDescending",
+                                    "exposureAdjust",
+                                    "retainAllBooks",
+                                    "MostPopularItems"
+                                ]
+                            ]
+                        }
+                    ],
+                    "out": "standard"
+                },
+                "ArkCustomerEBook": {
+                    "chain": [
+                        "sortDescending",
+                        "exposureAdjust",
+                        {
+                            "fallback": [
+                                "RoundRobinEBook",
+                                "BayesEBookRecommender",
+                                "MostPopularEBooks"
+                            ]
+                        }
+                    ],
+                    "out": "standard"
+                },
+                "ArkCustomerItem": {
+                    "chain": [
+                        "sortDescending",
+                        "exposureAdjust",
+                        "RoundRobinItems"
+                    ],
+                    "out": "standard"
+                },
+                "ArkCustomerItemDebug": {
+                    "chain": [
+                        "sortDescending",
+                        "exposureAdjust",
+                        {
+                            "fallback": [
+                                [
+                                    "frequencyExponentialAdjust",
+                                    "ItemSiblingsForCluster"
+                                ],
+                                "MostPopularItems"
+                            ]
+                        }
+                    ],
+                    "out": "debug"
+                },
+                "ArkCustomerItemRAW": {
+                    "chain": [
+                        "sortDescending",
+                        "RoundRobinItems"
+                    ],
+                    "out": "standard"
+                },
+                "ArkCustomerWishlist": {
+                    "chain": [
+                        {
+                            "aggregate": [
+                                "(ArkCustomerItem)",
+                                [
+                                    "selectTail",
+                                    "RoundRobinCustomerItemsOnInput",
+                                    "ExternalIdsToInput"
+                                ]
+                            ]
+                        }
+                    ],
+                    "out": "standard"
+                },
+                "ArkItemItem": {
+                    "chain": [
+                        {
+                            "fallback": [
+                                [
+                                    "CencorISBN",
+                                    "sortDescending",
+                                    "CoOccurenceItemItem"
+                                ],
+                                [
+                                    "CencorISBN",
+                                    "sortDescending",
+                                    "popularityAdjust",
+                                    "RelatedDocuments"
+                                ]
+                            ]
+                        }
+                    ],
+                    "out": "standard"
+                },
+                "ArkItemItemCencored": {
+                    "chain": [
+                        {
+                            "fallback": [
+                                [
+                                    "CencorISBN",
+                                    "sortDescending",
+                                    "CoOccurenceItemItem"
+                                ],
+                                [
+                                    "CencorISBN",
+                                    "sortDescending",
+                                    "popularityAdjust",
+                                    "RelatedDocuments"
+                                ]
+                            ]
+                        }
+                    ],
+                    "out": "standard"
+                },
+                "ArkItemItemDewey": {
+                    "chain": [
+                        {
+                            "fallback": [
+                                [
+                                    "CencorISBN",
+                                    "sortDescending",
+                                    "CoOccurenceItemItem"
+                                ],
+                                [
+                                    "sortDescending",
+                                    "popularityAdjust",
+                                    "CencorISBN",
+                                    "FindByDewey"
+                                ],
+                                [
+                                    "CencorISBN",
+                                    "sortDescending",
+                                    "popularityAdjust",
+                                    "RelatedDocuments"
+                                ]
+                            ]
+                        }
+                    ],
+                    "out": "standard"
+                },
+                "ArkItemItemLLRRAW": {
+                    "chain": [
+                        "sortDescending",
+                        "LLRSiblings"
+                    ],
+                    "out": "standard"
+                },
+                "ArkItemItemRAW": {
+                    "chain": [
+                        "sortDescending",
+                        "CoOccurenceItemItem"
+                    ],
+                    "out": "standard"
+                },
+                "ArkItemItemSameType": {
+                    "chain": [
+                        {
+                            "fallback": [
+                                [
+                                    "CencorISBN",
+                                    "sortDescending",
+                                    "retainMatching",
+                                    "CoOccurenceItemItem"
+                                ],
+                                [
+                                    "shuffle",
+                                    "retainHead",
+                                    "CencorISBN",
+                                    "sortDescending",
+                                    "popularityAdjust",
+                                    "retainMatching",
+                                    "RelatedDocuments"
+                                ]
+                            ]
+                        }
+                    ],
+                    "out": "standard"
+                },
+                "CustomerClickHistory": {
+                    "chain": [
+                        "sortDescending",
+                        {
+                            "fallback": [
+                                {
+                                    "aggregate": [
+                                        "RoundRobinReadItems",
+                                        "(ArkCustomerItem)"
+                                    ]
+                                },
+                                [
+                                    "frequencyExponentialAdjust",
+                                    "ItemSiblingsForCluster"
+                                ],
+                                "MostPopularItems"
+                            ]
+                        }
+                    ],
+                    "out": "standard"
+                },
+                "CustomersForBookRecommender": {
+                    "chain": [
+                        "SemanticCloudEntityCluster"
+                    ],
+                    "out": "standard"
+                },
+                "CustomersForBooks": {
+                    "chain": [
+                        "FilterCustomersWithBooks",
+                        "sortDescending",
+                        "ItemsCloudCustomers",
+                        "sortDescending",
+                        {
+                            "aggregate": [
+                                {
+                                    "FindSemanticCloud": []
+                                }
+                            ]
+                        }
+                    ],
+                    "out": "debug"
+                },
+                "CustomersForBooks-test": {
+                    "chain": [
+                        [
+                            "selectTail",
+                            "RoundRobinCustomerItemsOnInput",
+                            "ExternalIdsToInput"
+                        ]
+                    ],
+                    "out": "standard"
+                },
+                "ItemClusterCloud": {
+                    "chain": [
+                        "sortDescending",
+                        "exposureAdjust",
+                        "SemanticCloudEntityCluster"
+                    ],
+                    "out": "standard"
+                },
+                "ItemClusterCloud10": {
+                    "chain": [
+                        "sortDescending",
+                        {
+                            "aggregate": [
+                                {
+                                    "MultiIdPipe": [
+                                        [
+                                            "exposureAdjust",
+                                            "SemanticCloudEntityCluster"
+                                        ],
+                                        [
+                                            "exposureAdjust",
+                                            "SemanticCloudEntityCluster"
+                                        ],
+                                        [
+                                            "exposureAdjust",
+                                            "SemanticCloudEntityCluster"
+                                        ],
+                                        [
+                                            "exposureAdjust",
+                                            "SemanticCloudEntityCluster"
+                                        ],
+                                        [
+                                            "exposureAdjust",
+                                            "SemanticCloudEntityCluster"
+                                        ],
+                                        [
+                                            "exposureAdjust",
+                                            "SemanticCloudEntityCluster"
+                                        ],
+                                        [
+                                            "exposureAdjust",
+                                            "SemanticCloudEntityCluster"
+                                        ],
+                                        [
+                                            "exposureAdjust",
+                                            "SemanticCloudEntityCluster"
+                                        ],
+                                        [
+                                            "exposureAdjust",
+                                            "SemanticCloudEntityCluster"
+                                        ],
+                                        [
+                                            "exposureAdjust",
+                                            "SemanticCloudEntityCluster"
+                                        ]
+                                    ]
+                                }
+                            ]
+                        }
+                    ],
+                    "out": "standard"
+                },
+                "ItemClusterCloud2": {
+                    "chain": [
+                        "sortDescending",
+                        {
+                            "aggregate": [
+                                {
+                                    "MultiIdPipe": [
+                                        [
+                                            "exposureAdjust",
+                                            "SemanticCloudEntityCluster"
+                                        ],
+                                        [
+                                            "exposureAdjust",
+                                            "SemanticCloudEntityCluster"
+                                        ]
+                                    ]
+                                }
+                            ]
+                        }
+                    ],
+                    "out": "standard"
+                },
+                "ItemClusterCloud3": {
+                    "chain": [
+                        "sortDescending",
+                        {
+                            "aggregate": [
+                                {
+                                    "MultiIdPipe": [
+                                        [
+                                            "exposureAdjust",
+                                            "SemanticCloudEntityCluster"
+                                        ],
+                                        [
+                                            "exposureAdjust",
+                                            "SemanticCloudEntityCluster"
+                                        ],
+                                        [
+                                            "exposureAdjust",
+                                            "SemanticCloudEntityCluster"
+                                        ]
+                                    ]
+                                }
+                            ]
+                        }
+                    ],
+                    "out": "standard"
+                },
+                "ItemClusterCloud4": {
+                    "chain": [
+                        "sortDescending",
+                        {
+                            "aggregate": [
+                                {
+                                    "MultiIdPipe": [
+                                        [
+                                            "exposureAdjust",
+                                            "SemanticCloudEntityCluster"
+                                        ],
+                                        [
+                                            "exposureAdjust",
+                                            "SemanticCloudEntityCluster"
+                                        ],
+                                        [
+                                            "exposureAdjust",
+                                            "SemanticCloudEntityCluster"
+                                        ],
+                                        [
+                                            "exposureAdjust",
+                                            "SemanticCloudEntityCluster"
+                                        ]
+                                    ]
+                                }
+                            ]
+                        }
+                    ],
+                    "out": "standard"
+                },
+                "ItemClusterCloud5": {
+                    "chain": [
+                        "sortDescending",
+                        {
+                            "aggregate": [
+                                {
+                                    "MultiIdPipe": [
+                                        [
+                                            "exposureAdjust",
+                                            "SemanticCloudEntityCluster"
+                                        ],
+                                        [
+                                            "exposureAdjust",
+                                            "SemanticCloudEntityCluster"
+                                        ],
+                                        [
+                                            "exposureAdjust",
+                                            "SemanticCloudEntityCluster"
+                                        ],
+                                        [
+                                            "exposureAdjust",
+                                            "SemanticCloudEntityCluster"
+                                        ],
+                                        [
+                                            "exposureAdjust",
+                                            "SemanticCloudEntityCluster"
+                                        ]
+                                    ]
+                                }
+                            ]
+                        }
+                    ],
+                    "out": "standard"
+                },
+                "ItemClusterCloud6": {
+                    "chain": [
+                        "sortDescending",
+                        {
+                            "aggregate": [
+                                {
+                                    "MultiIdPipe": [
+                                        [
+                                            "exposureAdjust",
+                                            "SemanticCloudEntityCluster"
+                                        ],
+                                        [
+                                            "exposureAdjust",
+                                            "SemanticCloudEntityCluster"
+                                        ],
+                                        [
+                                            "exposureAdjust",
+                                            "SemanticCloudEntityCluster"
+                                        ],
+                                        [
+                                            "exposureAdjust",
+                                            "SemanticCloudEntityCluster"
+                                        ],
+                                        [
+                                            "exposureAdjust",
+                                            "SemanticCloudEntityCluster"
+                                        ],
+                                        [
+                                            "exposureAdjust",
+                                            "SemanticCloudEntityCluster"
+                                        ]
+                                    ]
+                                }
+                            ]
+                        }
+                    ],
+                    "out": "standard"
+                },
+                "ItemClusterCloud7": {
+                    "chain": [
+                        "sortDescending",
+                        {
+                            "aggregate": [
+                                {
+                                    "MultiIdPipe": [
+                                        [
+                                            "exposureAdjust",
+                                            "SemanticCloudEntityCluster"
+                                        ],
+                                        [
+                                            "exposureAdjust",
+                                            "SemanticCloudEntityCluster"
+                                        ],
+                                        [
+                                            "exposureAdjust",
+                                            "SemanticCloudEntityCluster"
+                                        ],
+                                        [
+                                            "exposureAdjust",
+                                            "SemanticCloudEntityCluster"
+                                        ],
+                                        [
+                                            "exposureAdjust",
+                                            "SemanticCloudEntityCluster"
+                                        ],
+                                        [
+                                            "exposureAdjust",
+                                            "SemanticCloudEntityCluster"
+                                        ],
+                                        [
+                                            "exposureAdjust",
+                                            "SemanticCloudEntityCluster"
+                                        ]
+                                    ]
+                                }
+                            ]
+                        }
+                    ],
+                    "out": "standard"
+                },
+                "ItemClusterCloud8": {
+                    "chain": [
+                        "sortDescending",
+                        {
+                            "aggregate": [
+                                {
+                                    "MultiIdPipe": [
+                                        [
+                                            "exposureAdjust",
+                                            "SemanticCloudEntityCluster"
+                                        ],
+                                        [
+                                            "exposureAdjust",
+                                            "SemanticCloudEntityCluster"
+                                        ],
+                                        [
+                                            "exposureAdjust",
+                                            "SemanticCloudEntityCluster"
+                                        ],
+                                        [
+                                            "exposureAdjust",
+                                            "SemanticCloudEntityCluster"
+                                        ],
+                                        [
+                                            "exposureAdjust",
+                                            "SemanticCloudEntityCluster"
+                                        ],
+                                        [
+                                            "exposureAdjust",
+                                            "SemanticCloudEntityCluster"
+                                        ],
+                                        [
+                                            "exposureAdjust",
+                                            "SemanticCloudEntityCluster"
+                                        ],
+                                        [
+                                            "exposureAdjust",
+                                            "SemanticCloudEntityCluster"
+                                        ]
+                                    ]
+                                }
+                            ]
+                        }
+                    ],
+                    "out": "standard"
+                },
+                "ItemClusterCloud9": {
+                    "chain": [
+                        "sortDescending",
+                        {
+                            "aggregate": [
+                                {
+                                    "MultiIdPipe": [
+                                        [
+                                            "exposureAdjust",
+                                            "SemanticCloudEntityCluster"
+                                        ],
+                                        [
+                                            "exposureAdjust",
+                                            "SemanticCloudEntityCluster"
+                                        ],
+                                        [
+                                            "exposureAdjust",
+                                            "SemanticCloudEntityCluster"
+                                        ],
+                                        [
+                                            "exposureAdjust",
+                                            "SemanticCloudEntityCluster"
+                                        ],
+                                        [
+                                            "exposureAdjust",
+                                            "SemanticCloudEntityCluster"
+                                        ],
+                                        [
+                                            "exposureAdjust",
+                                            "SemanticCloudEntityCluster"
+                                        ],
+                                        [
+                                            "exposureAdjust",
+                                            "SemanticCloudEntityCluster"
+                                        ],
+                                        [
+                                            "exposureAdjust",
+                                            "SemanticCloudEntityCluster"
+                                        ],
+                                        [
+                                            "exposureAdjust",
+                                            "SemanticCloudEntityCluster"
+                                        ]
+                                    ]
+                                }
+                            ]
+                        }
+                    ],
+                    "out": "standard"
+                },
+                "MostPopularItemsWithScore": {
+                    "chain": [
+                        "sortDescending",
+                        "MostPopularItems"
+                    ],
+                    "out": "debug"
+                },
+                "PopularAudio": {
+                    "chain": [
+                        "CencorISBN",
+                        "MostPopularAudioBooks"
+                    ],
+                    "out": "standard"
+                },
+                "PopularBooks": {
+                    "chain": [
+                        "CencorISBN",
+                        "MostPopularBooks"
+                    ],
+                    "out": "standard"
+                },
+                "PopularEBooks": {
+                    "chain": [
+                        "CencorISBN",
+                        "MostPopularEBooks"
+                    ],
+                    "out": "standard"
+                },
+                "RecByDewey": {
+                    "chain": [
+                        "sortDescending",
+                        "popularityAdjust",
+                        "FindByDewey"
+                    ],
+                    "out": "standard"
+                },
+                "SemanticallySimilarItemsBm25": {
+                    "chain": [
+                        "SemanticallySimilarItemsBm25"
+                    ],
+                    "out": "debug"
+                },
+                "noSuchRecommender": {
+                    "chain": [
+                        "noSuchRecommender"
+                    ],
+                    "out": "standard"
+                }
+            },
+            "workPoolSize": 5
+        },
+        "lruCache": {
+            "cleanup": {
+                "delay": "1m",
+                "enabled": false,
+                "periode": "2m"
+            },
+            "expirytime": "1d",
+            "size": 5000
+        },
+        "metaAggregates": {},
+        "monitorDataProvider": "TimeFrame",
+        "numberOfSnapshotsToRetain": "5;",
+        "properties": {},
+        "serviceName": "DEFAULT_SERVICENAME",
+        "servicename": "DEFAULT_SERVICENAME",
+        "updateListeners": {
+            "CencorISBN": {
+                "class": "com.sannsyn.aggregator.models.aggregate.coltimpl.IdFilter",
+                "tags": [
+                    "cencor_isbn"
+                ],
+                "updateFilterName": ""
+            }
+        },
+        "updates": {
+            "filters": {},
+            "queueSize": 1000
+        }
+    }
+}

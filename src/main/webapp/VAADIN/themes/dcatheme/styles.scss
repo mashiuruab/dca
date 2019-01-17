@@ -1,0 +1,11 @@
+@import "assets/css/sannsyn-icon-font.css";
+@import "assets/css/scaffolding-style.css";
+@import "dcatheme.scss";
+@import "addons.scss";
+// This file prefixes all rules with the theme name to avoid causing conflicts with other themes.
+// The actual styles should be defined in dcatheme.scss
+
+.dcatheme {
+  @include addons;
+  @include dcatheme;
+}

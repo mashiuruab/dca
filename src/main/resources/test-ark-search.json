@@ -1,0 +1,11 @@
+[
+  [
+    "search",
+    {
+      "account": "ark",
+      "taxon": "item",
+      "query": "*Murakami*",
+      "pointers": ["/isbn", "/title"]
+    }
+  ]
+]

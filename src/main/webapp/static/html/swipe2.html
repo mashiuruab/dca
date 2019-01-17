@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>swipeleft demo</title>
+  <script src="//code.jquery.com/jquery-1.10.2.min.js"></script>
+  <script src="https://hammerjs.github.io/dist/hammer.js"></script>
+
+
+  <style>
+    #myElement {
+      background: silver;
+      height: 30px;
+      text-align: center;
+      font: 30px/300px Helvetica, Arial, sans-serif;
+    }
+  </style>
+
+
+</head>
+<body>
+
+<h3>Swipe the green rectangle in the left direction to change its color:</h3>
+<div class="box" id="box1"></div>
+<div class="box" id="box2"></div>
+
+<div id="myElement"></div>
+
+<script>
+    $(function () {
+        var myElement = document.getElementById('myElement');
+
+        // We create a manager object, which is the same as Hammer(), but without the presetted recognizers.
+        var mc = new Hammer.Manager(myElement);
+
+
+// Tap recognizer with minimal 2 taps
+        mc.add( new Hammer.Tap({ event: 'doubletap', taps: 2 }) );
+// Single tap recognizer
+        mc.add( new Hammer.Tap({ event: 'singletap' }) );
+
+        mc.add(new Hammer.Swipe({event: 'swipe'}));
+
+
+        // we want to recognize this simulatenous, so a quadrupletap will be detected even while a tap has been recognized.
+        mc.get('doubletap').recognizeWith('singletap');
+        // we only want to trigger a tap, when we don't have detected a doubletap
+        mc.get('singletap').requireFailure('doubletap');
+
+
+        mc.on("singletap doubletap", function(ev) {
+            myElement.textContent = ev.type +" ";
+        });
+
+        // listen to events...
+        mc.on("swipeleft", function (ev) {
+            console.log("swipe left ....");
+            myElement.textContent = ev.type + " gesture detected.";
+        });
+
+        // listen to events...
+        mc.on("swiperight", function (ev) {
+            console.log("swipe right ....");
+            myElement.textContent = ev.type + " gesture detected.";
+        });
+
+
+    });
+</script>
+
+</body>
+</html>

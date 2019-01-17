@@ -1,0 +1,12 @@
+{
+  "messageId": -4504324314607140772,
+  "accountId": "sannsyn",
+  "requestMessageId": -1750375873724627852,
+  "status": "ACTIVE",
+  "serviceName": "ark",
+  "serviceDescription": "Ark, customer-book and supporting aggregates",
+  "configurationName": "ark",
+  "numEntities": 4452410,
+  "runningSince": 1457525714138,
+  "statusDescription": "ACTIVE"
+}

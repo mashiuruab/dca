@@ -1,0 +1,8 @@
+adminServerUrl=https://authtest.sannsyn.com
+wsUserName=sannsyn
+wsPassword=XN9s7peach
+mailSenderUserName=sannsyn.com@gmail.com
+mailSenderPassword=itwouldbejustperfectifyouletmein
+metaDataServerUrl=https://metadata.sannsyn.com
+analyticsServerUrl=https://stats.sannsyn.com
+tmpDirectory=/tmp/

@@ -1,0 +1,103 @@
+{
+  "root": {
+    "uuid": "unqueId",
+    "accountIcon": "<url to account icon>",
+    "sections": [
+      {
+        "name": "operations",
+        "containers": [
+          {
+            "name": "dashboard",
+            "icon": "IconHome",
+            "widgets": [
+              {
+                "name" : "emailRecommendations"
+              },
+              {
+                "name" : "numberOfRecommendations"
+              },
+              {
+                "name" : "mostPopularItems"
+              }
+            ]
+          },
+          {
+            "name": "inspectItem",
+            "icon": "IconInspect",
+            "title": "Find items and products",
+            "endpoint": "https://some-host/item-detail-lookup/?account=ark&id=2348",
+            "bindings": {
+              "title": "Title",
+              "subTitle": "Author",
+              "info": "Info"
+            }
+          },
+
+          {
+            "name": "controller"
+          },
+
+          {
+            "name": "analytics"
+          },
+
+          {
+            "name": "customer-targeting"
+          }
+        ]
+      },
+
+      {
+        "name": "admin",
+        "containers": [
+          {
+            "name": "dca-setup"
+          },
+          {
+            "name": "Users",
+            "icon": "IconUser",
+            "widgets": [
+              {
+                "name" : "UserWidget1"
+              },
+              {
+                "name" : "UserWidget2"
+              },
+              {
+                "name" : "UserWidget3"
+              }
+            ]
+          },
+          {
+            "name": "Roles",
+            "icon": "IconRoles",
+            "title": "Find items and products",
+            "endpoint": "https://some-host/item-detail-lookup/?account=ark&id=2348",
+            "bindings": {
+              "title": "Title",
+              "subTitle": "Author",
+              "info": "Info"
+            }
+          }
+        ]
+      },
+
+      {
+        "name": "help",
+        "containers": [
+          {
+            "name": "Help"
+          }
+        ]
+      }
+
+    ],
+    "settings": {
+      "account": "ark",
+      "service": {
+        "serviceId": "c81276faded14a1d8ff14adc74d233c1"
+      },
+      "language": "en"
+    }
+  }
+}

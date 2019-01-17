@@ -1,0 +1,399 @@
+{
+  "status": "ok",
+  "count": 8,
+  "accounts": [
+    {
+      "uuid": "c8f8c10a665849eb87b023e708669b29",
+      "name": "Sannsyn Test",
+      "externalManager": {
+        "uuid": "83d4d2e50850489e9a93bcc7c1cc8ff0",
+        "username": "kjetil..hustveit@gmail.com",
+        "person": {
+          "type": 0
+        }
+      },
+      "active": false
+    },
+    {
+      "uuid": "4388d2eaba3142d7a6b249a86cdb0068",
+      "name": "Sannsyn Evolution",
+      "externalManager": {
+        "uuid": "e5e25cb6d3f141de8b10440c1f0e5ab2",
+        "username": "mdservice"
+      },
+      "internalManager": {
+        "uuid": "e5e25cb6d3f141de8b10440c1f0e5ab2"
+      },
+      "active": true,
+      "selectedService": {
+        "uuid": "620745982297471cb524ed196c106144",
+        "name": "Test service",
+        "serviceEndpoint": {
+          "uuid": "b21ac08922044dfabdf3b4e75146e826",
+          "name": "Test service",
+          "type": 0,
+          "protocol": "https",
+          "host": "arkanbefaler.sannsyn.com",
+          "endpointAddress": "https://arkanbefaler.sannsyn.com/path_to_configuration_endpoint"
+        },
+        "account": {
+          "uuid": "4388d2eaba3142d7a6b249a86cdb0068"
+        }
+      },
+      "services": [
+        {
+          "uuid": "b6d6a57a0186495f975328ef3d104ada",
+          "name": "Test service",
+          "serviceEndpoint": {
+            "uuid": "1244cd84f8f24181a7f09d2179a0d509",
+            "name": "Test service",
+            "type": 0,
+            "protocol": "https",
+            "host": "arkanbefaler.sannsyn.com",
+            "endpointAddress": "https://arkanbefaler.sannsyn.com/path_to_configuration_endpoint"
+          },
+          "account": {
+            "uuid": "4388d2eaba3142d7a6b249a86cdb0068"
+          }
+        },
+        {
+          "uuid": "8df9e340135443f0847ac2739e6be4e6",
+          "name": "Testing service",
+          "serviceEndpoint": {
+            "uuid": "684d444b3a454b3a91a584d7c6e40a4f",
+            "name": "Testing service",
+            "type": 0,
+            "protocol": "https",
+            "host": "arkanbefaler.sannsyn.com",
+            "endpointAddress": "https://arkanbefaler.sannsyn.com/path_to_configuration_endpoint"
+          },
+          "account": {
+            "uuid": "4388d2eaba3142d7a6b249a86cdb0068"
+          }
+        },
+        {
+          "uuid": "9840f4f84ffd4daa8f6237a76988d1fe",
+          "name": "Test service",
+          "serviceEndpoint": {
+            "uuid": "1d8ec222e7f54ea89725db5fcd58c5eb",
+            "name": "Test service",
+            "type": 0,
+            "protocol": "https",
+            "host": "arkanbefaler.sannsyn.com",
+            "endpointAddress": "https://arkanbefaler.sannsyn.com/path_to_configuration_endpoint"
+          },
+          "account": {
+            "uuid": "4388d2eaba3142d7a6b249a86cdb0068"
+          }
+        },
+        {
+          "uuid": "5883f910af7146c6aa88cb861ce132aa",
+          "name": "Test service",
+          "serviceEndpoint": {
+            "uuid": "2de6f020258e44fdab0791c284945800",
+            "name": "Test service",
+            "type": 0,
+            "protocol": "https",
+            "host": "arkanbefaler.sannsyn.com",
+            "endpointAddress": "https://arkanbefaler.sannsyn.com/path_to_configuration_endpoint"
+          },
+          "account": {
+            "uuid": "4388d2eaba3142d7a6b249a86cdb0068"
+          }
+        },
+        {
+          "uuid": "504389e06b9945a784a6f43689db24fd",
+          "name": "Test service",
+          "serviceEndpoint": {
+            "uuid": "f6da5163d2864d1e85f2d1bc5bedfb8a",
+            "name": "Test service",
+            "type": 0,
+            "protocol": "https",
+            "host": "arkanbefaler.sannsyn.com",
+            "endpointAddress": "https://arkanbefaler.sannsyn.com/path_to_configuration_endpoint"
+          },
+          "account": {
+            "uuid": "4388d2eaba3142d7a6b249a86cdb0068"
+          }
+        },
+        {
+          "uuid": "7ce009c87de249e094b99933f91a3f63",
+          "name": "Test service",
+          "serviceEndpoint": {
+            "uuid": "f618fa327b4849618f2d0fcae9f52ac5",
+            "name": "Test service",
+            "type": 0,
+            "protocol": "https",
+            "host": "arkanbefaler.sannsyn.com",
+            "endpointAddress": "https://arkanbefaler.sannsyn.com/path_to_configuration_endpoint"
+          },
+          "account": {
+            "uuid": "4388d2eaba3142d7a6b249a86cdb0068"
+          }
+        },
+        {
+          "uuid": "620745982297471cb524ed196c106144",
+          "name": "Test service",
+          "serviceEndpoint": {
+            "uuid": "b21ac08922044dfabdf3b4e75146e826",
+            "name": "Test service",
+            "type": 0,
+            "protocol": "https",
+            "host": "arkanbefaler.sannsyn.com",
+            "endpointAddress": "https://arkanbefaler.sannsyn.com/path_to_configuration_endpoint"
+          },
+          "account": {
+            "uuid": "4388d2eaba3142d7a6b249a86cdb0068"
+          }
+        }
+      ]
+    },
+    {
+      "uuid": "4388d2eaba3142d7a6b249a86cdb0069",
+      "name": "Sannsyn Dev",
+      "externalManager": {
+        "uuid": "e5e25cb6d3f141de8b10440c1f0e5ab2",
+        "username": "mdservice"
+      },
+      "internalManager": {
+        "uuid": "e5e25cb6d3f141de8b10440c1f0e5ab2"
+      },
+      "active": false,
+      "selectedService": {
+        "uuid": "b6d6a57a0186495f975328ef3d104ada",
+        "name": "Test service",
+        "serviceEndpoint": {
+          "uuid": "1244cd84f8f24181a7f09d2179a0d509",
+          "name": "Test service",
+          "type": 0,
+          "protocol": "https",
+          "host": "arkanbefaler.sannsyn.com",
+          "endpointAddress": "https://arkanbefaler.sannsyn.com/path_to_configuration_endpoint"
+        },
+        "account": {
+          "uuid": "4388d2eaba3142d7a6b249a86cdb0068"
+        }
+      },
+      "services": [
+        {
+          "uuid": "b6d6a57a0186495f975328ef3d104ada",
+          "name": "Test service",
+          "serviceEndpoint": {
+            "uuid": "1244cd84f8f24181a7f09d2179a0d509",
+            "name": "Test service",
+            "type": 0,
+            "protocol": "https",
+            "host": "arkanbefaler.sannsyn.com",
+            "endpointAddress": "https://arkanbefaler.sannsyn.com/path_to_configuration_endpoint"
+          },
+          "account": {
+            "uuid": "4388d2eaba3142d7a6b249a86cdb0068"
+          }
+        }
+      ]
+    },
+    {
+      "uuid": "ec823268cb5f4c6592e9e231e2412d31",
+      "name": "Sannsyn Development",
+      "externalManager": {
+        "uuid": "e5e25cb6d3f141de8b10440c1f0e5ab2",
+        "username": "mdservice"
+      },
+      "internalManager": {
+        "uuid": "e5e25cb6d3f141de8b10440c1f0e5ab2"
+      },
+      "active": false,
+      "selectedService": {
+        "uuid": "30b7fd5eb6724518b9e59316f2625e9a",
+        "name": "Test service",
+        "serviceEndpoint": {
+          "uuid": "8cd8b181d19342098bfa8c879e288c7a",
+          "name": "Test service",
+          "type": 0,
+          "protocol": "https",
+          "host": "arkanbefaler.sannsyn.com",
+          "endpointAddress": "https://arkanbefaler.sannsyn.com/path_to_configuration_endpoint"
+        },
+        "account": {
+          "uuid": "ec823268cb5f4c6592e9e231e2412d31"
+        }
+      },
+      "services": [
+        {
+          "uuid": "30b7fd5eb6724518b9e59316f2625e9a",
+          "name": "Test service",
+          "serviceEndpoint": {
+            "uuid": "8cd8b181d19342098bfa8c879e288c7a",
+            "name": "Test service",
+            "type": 0,
+            "protocol": "https",
+            "host": "arkanbefaler.sannsyn.com",
+            "endpointAddress": "https://arkanbefaler.sannsyn.com/path_to_configuration_endpoint"
+          },
+          "account": {
+            "uuid": "ec823268cb5f4c6592e9e231e2412d31"
+          }
+        }
+      ]
+    },
+    {
+      "uuid": "ec823268cb5f4c6592e9e231e2412d31",
+      "name": "Sannsyn Development",
+      "externalManager": {
+        "uuid": "e5e25cb6d3f141de8b10440c1f0e5ab2",
+        "username": "mdservice"
+      },
+      "internalManager": {
+        "uuid": "e5e25cb6d3f141de8b10440c1f0e5ab2"
+      },
+      "active": false,
+      "selectedService": {
+        "uuid": "30b7fd5eb6724518b9e59316f2625e9a",
+        "name": "Test service",
+        "serviceEndpoint": {
+          "uuid": "8cd8b181d19342098bfa8c879e288c7a",
+          "name": "Test service",
+          "type": 0,
+          "protocol": "https",
+          "host": "arkanbefaler.sannsyn.com",
+          "endpointAddress": "https://arkanbefaler.sannsyn.com/path_to_configuration_endpoint"
+        },
+        "account": {
+          "uuid": "ec823268cb5f4c6592e9e231e2412d31"
+        }
+      },
+      "services": [
+        {
+          "uuid": "30b7fd5eb6724518b9e59316f2625e9a",
+          "name": "Test service",
+          "serviceEndpoint": {
+            "uuid": "8cd8b181d19342098bfa8c879e288c7a",
+            "name": "Test service",
+            "type": 0,
+            "protocol": "https",
+            "host": "arkanbefaler.sannsyn.com",
+            "endpointAddress": "https://arkanbefaler.sannsyn.com/path_to_configuration_endpoint"
+          },
+          "account": {
+            "uuid": "ec823268cb5f4c6592e9e231e2412d31"
+          }
+        }
+      ]
+    },
+    {
+      "uuid": "c880d3cb9a1b403c8ed7c27fabd88005",
+      "name": "Sannsyn Development",
+      "externalManager": {
+        "uuid": "e5e25cb6d3f141de8b10440c1f0e5ab2",
+        "username": "mdservice"
+      },
+      "internalManager": {
+        "uuid": "e5e25cb6d3f141de8b10440c1f0e5ab2"
+      },
+      "active": false,
+      "selectedService": {
+        "uuid": "620745982297471cb524ed196c106144",
+        "name": "Test service",
+        "serviceEndpoint": {
+          "uuid": "9c891d45266c4741aaedf83f742839c6",
+          "name": "Test service",
+          "type": 0,
+          "protocol": "https",
+          "host": "arkanbefaler.sannsyn.com",
+          "endpointAddress": "https://arkanbefaler.sannsyn.com/path_to_configuration_endpoint"
+        },
+        "account": {
+          "uuid": "c880d3cb9a1b403c8ed7c27fabd88005"
+        }
+      }
+    },
+    {
+      "uuid": "c880d3cb9a1b403c8ed7c27fabd88005",
+      "name": "Sannsyn Development",
+      "externalManager": {
+        "uuid": "e5e25cb6d3f141de8b10440c1f0e5ab2",
+        "username": "mdservice"
+      },
+      "internalManager": {
+        "uuid": "e5e25cb6d3f141de8b10440c1f0e5ab2"
+      },
+      "active": false,
+      "selectedService": {
+        "uuid": "620745982297471cb524ed196c106144",
+        "name": "Test service",
+        "serviceEndpoint": {
+          "uuid": "9c891d45266c4741aaedf83f742839c6",
+          "name": "Test service",
+          "type": 0,
+          "protocol": "https",
+          "host": "arkanbefaler.sannsyn.com",
+          "endpointAddress": "https://arkanbefaler.sannsyn.com/path_to_configuration_endpoint"
+        },
+        "account": {
+          "uuid": "c880d3cb9a1b403c8ed7c27fabd88005"
+        }
+      },
+      "services": [
+        {
+          "uuid": "620745982297471cb524ed196c106144",
+          "name": "Test service",
+          "serviceEndpoint": {
+            "uuid": "9c891d45266c4741aaedf83f742839c6",
+            "name": "Test service",
+            "type": 0,
+            "protocol": "https",
+            "host": "arkanbefaler.sannsyn.com",
+            "endpointAddress": "https://arkanbefaler.sannsyn.com/path_to_configuration_endpoint"
+          },
+          "account": {
+            "uuid": "c880d3cb9a1b403c8ed7c27fabd88005"
+          }
+        }
+      ]
+    },
+    {
+      "uuid": "c880d3cb9a1b403c8ed7c27fabd88005",
+      "name": "Sannsyn Development",
+      "externalManager": {
+        "uuid": "e5e25cb6d3f141de8b10440c1f0e5ab2",
+        "username": "mdservice"
+      },
+      "internalManager": {
+        "uuid": "e5e25cb6d3f141de8b10440c1f0e5ab2"
+      },
+      "active": false,
+      "selectedService": {
+        "uuid": "620745982297471cb524ed196c106144",
+        "name": "Test service",
+        "serviceEndpoint": {
+          "uuid": "9c891d45266c4741aaedf83f742839c6",
+          "name": "Test service",
+          "type": 0,
+          "protocol": "https",
+          "host": "arkanbefaler.sannsyn.com",
+          "endpointAddress": "https://arkanbefaler.sannsyn.com/path_to_configuration_endpoint"
+        },
+        "account": {
+          "uuid": "c880d3cb9a1b403c8ed7c27fabd88005"
+        }
+      },
+      "services": [
+        {
+          "uuid": "620745982297471cb524ed196c106144",
+          "name": "Test service",
+          "serviceEndpoint": {
+            "uuid": "9c891d45266c4741aaedf83f742839c6",
+            "name": "Test service",
+            "type": 0,
+            "protocol": "https",
+            "host": "arkanbefaler.sannsyn.com",
+            "endpointAddress": "https://arkanbefaler.sannsyn.com/path_to_configuration_endpoint"
+          },
+          "account": {
+            "uuid": "c880d3cb9a1b403c8ed7c27fabd88005"
+          }
+        }
+      ]
+    }
+  ]
+}

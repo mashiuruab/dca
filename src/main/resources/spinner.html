@@ -1,0 +1,40 @@
+<html>
+<head>
+    <style>
+        .spinner {
+            position: relative;
+            top: 50%;
+            left: 50%;
+            width: 4px;
+            height: 34px;
+            margin-left: -4px;
+            margin-top: -34px;
+            background: #40b08e;
+            transform: skewX(-30deg); /* Standard syntax */
+            animation: rotate2 5s infinite ease-in-out;
+        }
+
+        @keyframes rotate2 {
+            0% {
+                transform: perspective(120px) rotateX(0deg) skewX(-30deg);
+            }
+            50% {
+                transform: perspective(120px) rotateX(-180deg) skewX(-30deg);
+            }
+            100% {
+                transform: perspective(120px) rotateX(0deg) skewX(-30deg);
+            }
+        }
+
+        .spinner-container {
+            width: 300px;
+            height: 400px;
+        }
+    </style>
+</head>
+<body>
+<div class="spinner-container">
+    <div class="spinner"></div>
+</div>
+</body>
+</html>

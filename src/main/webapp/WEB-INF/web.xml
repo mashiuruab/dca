@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app
+    id="WebApp_ID" version="3.0"
+    metadata-complete="false"
+    xmlns="http://java.sun.com/xml/ns/javaee"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
+
+  <listener>
+    <listener-class>com.sannsyn.dca.vaadin.servlet.DCAWebAppContextListener</listener-class>
+  </listener>
+
+  <session-config>
+    <session-timeout>30</session-timeout>
+  </session-config>
+
+  <context-param>
+    <description>DCA Application production mode</description>
+    <param-name>productionMode</param-name>
+    <param-value>false</param-value>
+  </context-param>
+
+  <context-param>
+    <param-name>closeIdleSessions</param-name>
+    <param-value>true</param-value>
+  </context-param>
+
+  <servlet>
+    <servlet-name>dcaServlet</servlet-name>
+    <servlet-class>com.sannsyn.dca.vaadin.servlet.DCAServlet</servlet-class>
+
+    <init-param>
+      <param-name>UI</param-name>
+      <param-value>com.sannsyn.dca.vaadin.ui.DCAUI</param-value>
+    </init-param>
+    <async-supported>true</async-supported>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>dcaServlet</servlet-name>
+    <url-pattern>/*</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>dcaServlet</servlet-name>
+    <url-pattern>/VAADIN/*</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>demoVaadinServlet</servlet-name>
+    <servlet-class>com.sannsyn.dca.vaadin.servlet.DCADemoVaadinServlet</servlet-class>
+
+    <init-param>
+      <param-name>UI</param-name>
+      <param-value>com.sannsyn.dca.vaadin.ui.DCADemoUI</param-value>
+    </init-param>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>demoVaadinServlet</servlet-name>
+    <url-pattern>/vaadin-test/*</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>dummyTopMenuServlet</servlet-name>
+    <servlet-class>com.sannsyn.dca.vaadin.servlet.dummy.DCADummyTopMenuServlet</servlet-class>
+
+  </servlet>
+
+
+  <servlet-mapping>
+    <servlet-name>dummyTopMenuServlet</servlet-name>
+    <url-pattern>/top-menu/*</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>dummyServlet</servlet-name>
+    <servlet-class>com.sannsyn.dca.vaadin.servlet.dummy.DCADummyServlet</servlet-class>
+  </servlet>
+
+
+  <servlet-mapping>
+    <servlet-name>dummyServlet</servlet-name>
+    <url-pattern>/dummy/*</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>sampleControllerServlet</servlet-name>
+    <servlet-class>com.sannsyn.dca.vaadin.servlet.dummy.DCADummyControllerServlet</servlet-class>
+  </servlet>
+
+
+  <servlet-mapping>
+    <servlet-name>sampleControllerServlet</servlet-name>
+    <url-pattern>/sample-controller/*</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>demoAuthenticationService</servlet-name>
+    <servlet-class>com.sannsyn.dca.service.DCADemoAuthenticationService</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>demoAuthenticationService</servlet-name>
+    <url-pattern>/demoAuth</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>demoPopularityService</servlet-name>
+    <servlet-class>com.sannsyn.dca.service.demo.DCADemoPopularityServlet</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>demoPopularityService</servlet-name>
+    <url-pattern>/popularBooks</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>default</servlet-name>
+    <url-pattern>/static/*</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>demoMetadataService</servlet-name>
+    <servlet-class>com.sannsyn.dca.service.demo.DCADummyMetaDataService</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>demoMetadataService</servlet-name>
+    <url-pattern>/demoMetadata/*</url-pattern>
+  </servlet-mapping>
+
+</web-app>
